@@ -1,0 +1,9 @@
+{
+  "name": "Continuous Calendar",
+  "short_name": "Calendar",
+  "start_url": "/calendar/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#111827"
+}

@@ -1,0 +1,30 @@
+[Unit]
+Description=Continuous Calendar
+After=network.target
+
+[Service]
+Type=simple
+User=calendar
+Group=calendar
+WorkingDirectory=/opt/continuous-calendar
+EnvironmentFile=/etc/continuous-calendar.env
+ExecStart=/usr/bin/node /opt/continuous-calendar/server/server.js
+Restart=on-failure
+RestartSec=5
+StateDirectory=continuous-calendar
+StateDirectoryMode=0700
+Environment=CALENDAR_DATA_FILE=/var/lib/continuous-calendar/db.json
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/continuous-calendar
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+
+[Install]
+WantedBy=multi-user.target

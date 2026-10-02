@@ -1,0 +1,23 @@
+# Replace hostname/certificate paths. Keep the backend on loopback.
+server {
+    listen 443 ssl;
+    server_name calendar.example.com;
+    ssl_certificate /etc/ssl/local/calendar/fullchain.pem;
+    ssl_certificate_key /etc/ssl/local/calendar/key.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+
+    location = / { return 302 /calendar/; }
+    location = /calendar { return 301 /calendar/; }
+    location /calendar/ {
+        proxy_pass http://127.0.0.1:3000/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    location /api/ {
+        proxy_pass http://127.0.0.1:3000/api/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    location = /manifest.json { proxy_pass http://127.0.0.1:3000/manifest.json; }
+    location = /sw.js { proxy_pass http://127.0.0.1:3000/sw.js; }
+}
