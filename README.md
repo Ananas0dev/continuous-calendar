@@ -44,3 +44,7 @@ This is a recovered household application, prepared for public source review. It
 ## Origins and credits
 
 Evan Wallace's 2010 calendar is the project's starting point, not an original interface invented here. The recovered deployment has no complete source-control history, so the exact boundary between reused and rewritten code cannot be reconstructed reliably. His [MIT notice](third-party/evan-wallace-MIT.txt) is preserved, along with the notices for bundled Three.js. See [NOTICE.md](NOTICE.md) for external libraries and licensing scope.
+
+## License
+
+Original project code and documentation are licensed under [GNU GPL version 3](LICENSE) (`GPL-3.0-only`). Third-party components retain their own licenses and notices in [NOTICE.md](NOTICE.md).
