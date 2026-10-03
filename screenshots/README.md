@@ -12,15 +12,25 @@ The continuous calendar with Arabic notes and Hijri/Gregorian dates.
 
 ![Arabic weekly view](calendar-arabic-week.png)
 
+### English weekly view
+
+The continuous calendar with sample project plans, reminders, and learning notes.
+
+![English weekly view with sample notes](calendar-week-notes.png)
+
 ### Yearly overview
 
-The beginning of the yearly view using the Classic light theme.
+The yearly view using the Classic light theme, with sample notes on several days in every month. The year grid marks days containing notes; note text appears in the detail views.
 
 ![Yearly view in the light theme](calendar-year-light.png)
 
+The same yearly overview with the application's day-note panel open, showing sample planning and progress notes.
+
+![Yearly overview with sample notes in the day panel](calendar-year-notes.png)
+
 ### Daily planner
 
-An all-day sample note above the hourly schedule.
+Two all-day sample notes above the hourly schedule, with timed entries at 08:00 and 09:00.
 
 ![Daily planner](calendar-day.png)
 

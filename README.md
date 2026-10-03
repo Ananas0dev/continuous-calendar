@@ -4,22 +4,26 @@
 
 This project began from Evan Wallace's [Continuous Calendar](https://madebyevan.com/calendar/): scroll through weeks, click a day, and write a note. It grew into a household calendar while keeping that direct interaction at its center.
 
-![Calendar with synthetic demonstration data](screenshots/calendar.png)
+![Weekly calendar with synthetic demonstration notes](screenshots/calendar-week-notes.png)
 
 <details>
-<summary>More screenshots: Arabic weekly view, yearly overview, daily planner, and settings</summary>
+<summary>More screenshots: daily, weekly, and yearly views with sample notes, plus settings</summary>
 
 **Arabic weekly view with sample notes**
 
 ![Arabic weekly calendar with synthetic notes](screenshots/calendar-arabic-week.png)
 
-**Yearly view in the light theme**
+**Yearly view with marked note days in the light theme**
 
 ![Yearly calendar in the classic light theme](screenshots/calendar-year-light.png)
 
-**Daily planner**
+**Yearly overview with the day-note panel open**
 
-![Daily calendar with a sample all-day note](screenshots/calendar-day.png)
+![Yearly calendar with a panel showing synthetic notes](screenshots/calendar-year-notes.png)
+
+**Daily planner with all-day and timed sample notes**
+
+![Daily calendar with sample all-day and timed notes](screenshots/calendar-day.png)
 
 **Language, theme, weekend, and calendar settings**
 
