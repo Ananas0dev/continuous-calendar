@@ -6,6 +6,29 @@ This project began from Evan Wallace's [Continuous Calendar](https://madebyevan.
 
 ![Calendar with synthetic demonstration data](screenshots/calendar.png)
 
+<details>
+<summary>More screenshots: Arabic weekly view, yearly overview, daily planner, and settings</summary>
+
+**Arabic weekly view with sample notes**
+
+![Arabic weekly calendar with synthetic notes](screenshots/calendar-arabic-week.png)
+
+**Yearly view in the light theme**
+
+![Yearly calendar in the classic light theme](screenshots/calendar-year-light.png)
+
+**Daily planner**
+
+![Daily calendar with a sample all-day note](screenshots/calendar-day.png)
+
+**Language, theme, weekend, and calendar settings**
+
+![Calendar settings panel](screenshots/calendar-settings.png)
+
+These captures use synthetic notes in an isolated local instance. See the [screenshot gallery](screenshots/README.md) for capture details.
+
+</details>
+
 ## AI assistance and feedback
 
 AI generated most of the project-specific code and documentation. I brought the needs, tried things on my own setup, and shared the results to guide the work. I'm still learning, and there may be mistakes or better approaches I haven't discovered. Existing projects and libraries are credited separately.
