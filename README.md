@@ -6,6 +6,12 @@ This project began from Evan Wallace's [Continuous Calendar](https://madebyevan.
 
 ![Calendar with synthetic demonstration data](screenshots/calendar.png)
 
+## AI assistance and feedback
+
+AI generated most of the project-specific code and documentation. I brought the needs, tried things on my own setup, and shared the results to guide the work. I'm still learning, and there may be mistakes or better approaches I haven't discovered. Existing projects and libraries are credited separately.
+
+Suggestions, corrections, alternative solutions, and any helpful notes are welcome. Please [open an issue](https://github.com/Ananas0dev/continuous-calendar/issues) or send a pull request—even pointing me toward an existing tool or explaining a better way would help.
+
 ## Features in the recovered application
 
 - Continuous week scrolling and notes, with Arabic/English display settings.
