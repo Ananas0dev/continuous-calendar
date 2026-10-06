@@ -9,6 +9,7 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 const crypto = require('crypto');
+const needs = require('./needs');
 
 const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.resolve(process.env.CALENDAR_DATA_FILE || path.join(__dirname, '..', 'data', 'db.json'));
@@ -57,6 +58,7 @@ const defaultState = {
 let db = null;
 let dbSaveTimeout = null;
 db = loadDB();
+needs.initializeNeeds(db);
 
 function loadDB() {
     try {
@@ -77,22 +79,19 @@ function loadDB() {
 }
 
 function saveDB(data, immediate) {
-    try {
-        db = data || db;
-        db.lastUpdated = Date.now();
-        if (immediate) {
-            fs.writeFileSync(DATA_FILE, JSON.stringify(db, null, 2), 'utf8');
-            return;
-        }
-        if (dbSaveTimeout) clearTimeout(dbSaveTimeout);
-        dbSaveTimeout = setTimeout(() => {
-            fs.writeFile(DATA_FILE, JSON.stringify(db, null, 2), 'utf8', (err) => {
-                if (err) console.error('Error saving DB:', err);
-            });
-        }, 50);
-    } catch (err) {
-        console.error('Error saving DB:', err);
-    }
+    db = data || db;
+    db.lastUpdated = Date.now();
+    if (dbSaveTimeout) { clearTimeout(dbSaveTimeout); dbSaveTimeout = null; }
+    const temporary = DATA_FILE + '.tmp';
+    const write = () => {
+        fs.writeFileSync(temporary, JSON.stringify(db, null, 2), { encoding: 'utf8', mode: 0o600 });
+        fs.renameSync(temporary, DATA_FILE);
+    };
+    if (immediate) return write();
+    dbSaveTimeout = setTimeout(() => {
+        dbSaveTimeout = null;
+        try { write(); } catch (error) { console.error('Error saving calendar database:', error); }
+    }, 50);
 }
 
 function isOpenDoorActive() {
@@ -112,19 +111,21 @@ function generateToken() {
 }
 
 function findUserByToken(token) {
-    if (!token) return null;
-    return db.users.find(u => u.tokens && u.tokens.includes(token)) || null;
+    if (!token || !Array.isArray(db.users)) return null;
+    return db.users.find(u => u && Array.isArray(u.tokens) && u.tokens.includes(token)) || null;
 }
 
 function findUserByUsername(uname) {
-    if (!uname) return null;
+    if (typeof uname !== 'string' || !uname.trim() || !Array.isArray(db.users)) return null;
     const clean = uname.trim().toLowerCase();
-    return db.users.find(u => u.username.toLowerCase() === clean) || null;
+    return db.users.find(u => u && typeof u.username === 'string' && u.username.toLowerCase() === clean) || null;
 }
 
 function revokeTokenFromAllUsers(tok) {
     if (!tok) return;
+    if (!Array.isArray(db.users)) return;
     db.users.forEach(u => {
+        if (!u || typeof u !== 'object') return;
         if (Array.isArray(u.tokens) && u.tokens.includes(tok)) {
             u.tokens = u.tokens.filter(t => t !== tok);
         }
@@ -170,6 +171,7 @@ function cleanExpiredNotes() {
 function sendJSON(res, statusCode, payload) {
     res.writeHead(statusCode, {
         'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'no-store',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Device-Token, X-User-Name'
@@ -283,8 +285,8 @@ const server = http.createServer(async (req, res) => {
         // 2. Auth Login (Existing Registered User with Password/PIN Verification)
         if (pathname === '/api/auth/login' && req.method === 'POST') {
             const body = await parseBody(req);
-            const username = (body.username || '').trim();
-            const password = body.password !== undefined ? String(body.password).trim() : '';
+            const username = typeof body.username === 'string' ? body.username.trim() : '';
+            const password = body.password !== undefined && body.password !== null ? String(body.password).trim() : '';
 
             if (!username) return sendJSON(res, 400, { error: 'Username is required' });
 
@@ -326,9 +328,14 @@ const server = http.createServer(async (req, res) => {
 
             // Issue new token
             const newToken = generateToken();
-            if (!user.tokens) user.tokens = [];
+            if (!Array.isArray(user.tokens)) user.tokens = [];
             user.tokens.push(newToken);
-            saveDB();
+            try {
+                saveDB(db, true);
+            } catch (error) {
+                user.tokens = user.tokens.filter(existingToken => existingToken !== newToken);
+                throw error;
+            }
 
             return sendJSON(res, 200, {
                 status: 'approved',
@@ -926,6 +933,8 @@ const server = http.createServer(async (req, res) => {
             });
         }
 
+        if (await needs.handleNeeds(req, res, pathname, db, authUser, parseBody, sendJSON, saveDB)) return;
+
         // 7. Full Delta Sync
         if (pathname === '/api/sync') {
             if (req.method === 'POST') {
@@ -956,6 +965,9 @@ const server = http.createServer(async (req, res) => {
                 deletedNotes: Object.keys(db.deletedNotes || {}),
                 recurringEvents: getFilteredRecurringEventsForUser(authUser, req.headers['x-user-name']),
                 indicators: db.indicators || [],
+                needs: needs.snapshot(db, authUser),
+                authenticated: !!authUser,
+                user: authUser ? { id: authUser.id, username: authUser.username, name: authUser.name, role: authUser.role, color: authUser.color, avatar: authUser.avatar || '' } : null,
                 openDoor: isOpenDoorActive(),
                 serverTime: Date.now(),
                 lastUpdated: db.lastUpdated,
@@ -967,7 +979,7 @@ const server = http.createServer(async (req, res) => {
         return sendJSON(res, 404, { error: 'Route not found' });
 
     } catch (err) {
-        console.error('Server error:', err);
+        console.error('Server error:', req.method, pathname, err);
         return sendJSON(res, 500, { error: 'Internal Server Error' });
     }
 });

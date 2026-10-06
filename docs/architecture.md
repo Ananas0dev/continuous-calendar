@@ -12,6 +12,6 @@ flowchart LR
   Browser -. optional features .-> External[Spreadsheet / PDF / emoji / Hijri services]
 ```
 
-API areas include `/api/auth/*`, `/api/admin/*`, `/api/notes`, `/api/recurring-events`, `/api/indicators`, and `/api/sync`. The frontend uses same-origin absolute `/api/` URLs; preserve that route when deploying at `/calendar/`.
+API areas include `/api/auth/*`, `/api/admin/*`, `/api/notes`, `/api/recurring-events`, `/api/indicators`, `/api/needs`, and `/api/sync`. Shared needs are stored by the server; approved users manage items and deadlines, while admins manage categories. The frontend uses same-origin absolute `/api/` URLs; preserve that route when deploying at `/calendar/`.
 
 Browser localStorage stores preferences, sessions, and cached calendar state. External integrations are present in the recovered client; this is not a fully offline application. A minimal manifest and network-only service worker were added because the server expected those files but they were absent from the recovered directory.
