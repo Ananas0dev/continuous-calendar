@@ -45,6 +45,8 @@ Suggestions, corrections, alternative solutions, and any helpful notes are welco
 - User registration, an approval queue, administrator controls, and browser sessions.
 - Shared/private note permissions, pinned notes, recurring events, and incremental synchronization.
 - Gregorian/Hijri indicators, configurable weekends, themes, and display controls.
+- Shared household needs with user-added categories, admin-managed category edits/removal, per-item deadlines, and shared calendar links.
+- A local 3D space explorer with Earth, solar-system, galaxy, and illustrative cosmic-web views.
 - Import/export helpers, including external spreadsheet and PDF libraries.
 
 ## Run locally

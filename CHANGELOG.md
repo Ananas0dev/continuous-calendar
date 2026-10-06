@@ -1,5 +1,12 @@
 # Changes
 
+## Calendar navigation and needs polish — 2026-10-06
+
+- Translated the Needs page controls consistently into Arabic or English, added a visible Go to Today action, and aligned its type sizes with the app text-size setting.
+- Reset newly selected views to today while retaining the selected date when zooming between calendar views.
+- Let approved users add shared sections, renamed the built-in “Supermarket” section to “Groceries,” and kept section editing/removal admin-only.
+- Changed profile badges to initials avatars instead of uploaded pictures.
+
 ## Shared household needs and login reliability — 2026-10-06
 
 - Added server-backed shared needs categories and items, with admin-only category management, item deadlines, completion tracking, and calendar links.

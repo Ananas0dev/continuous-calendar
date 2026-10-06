@@ -4337,19 +4337,22 @@
     </script>
 <!-- needs styles start -->
 <style>        [hidden] { display: none !important; }
-        #calendar-needs-view { width: calc(var(--extra-width) + var(--cell-width) * 7); max-width: 100%; margin: 12px auto; padding: 16px; box-sizing: border-box; font-size: calc(14px * var(--font-scale)); }
+        #calendar-needs-view { width: calc(var(--extra-width) + var(--cell-width) * 7); max-width: 100%; margin: 12px auto; padding: 16px; box-sizing: border-box; font-size: calc(14px * var(--font-scale, 1)); line-height: 1.45; }
         #calendar-needs-view h2, #calendar-needs-view h3 { margin: 0; }
         .needs-heading, .needs-filters, .needs-category-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 12px; }
         .needs-heading { justify-content: space-between; }
-        .needs-heading p, .needs-meta, .needs-empty { color: var(--color-text-muted); font-size: .85em; }
-        .needs-filters label, .needs-editor label { display: flex; flex-direction: column; gap: 5px; }
+        .needs-heading-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+        #calendar-needs-view h2 { font-size: calc(22px * var(--font-scale, 1)); }
+        #calendar-needs-view h3 { font-size: calc(17px * var(--font-scale, 1)); }
+        .needs-heading p, .needs-meta, .needs-empty { color: var(--color-text-muted); font-size: calc(12px * var(--font-scale, 1)); }
+        .needs-filters label, .needs-editor label { display: flex; flex-direction: column; gap: 5px; font-size: calc(14px * var(--font-scale, 1)); }
         .needs-filters input, .needs-filters select, .needs-editor input, .needs-editor select { min-height: 42px; font: inherit; color: var(--color-text); background: var(--color-panel-bg); border: 1px solid var(--color-border); border-radius: 7px; padding: 6px 9px; box-sizing: border-box; max-width: 100%; }
         .needs-category, .needs-editor { border: 1px solid var(--color-border); border-radius: 12px; padding: 14px; background: var(--color-panel-bg); margin-bottom: 14px; }
         .needs-editor { display: flex; flex-wrap: wrap; gap: 12px; border-color: var(--color-primary); }
         .needs-editor h3 { width: 100%; }
         .needs-editor label { flex: 1 1 200px; }
         .needs-category-heading h3 { margin-inline-end: auto !important; font-size: 1.1em; }
-        #calendar-needs-view .button { width: auto; min-height: 40px; font-size: .9em; }
+        #calendar-needs-view .button { width: auto; min-height: 40px; font-size: calc(13px * var(--font-scale, 1)); }
         #calendar-needs-view .button:disabled { opacity: .5; cursor: default; }
         .needs-item { display: flex; align-items: flex-start; gap: 10px; border-top: 1px solid var(--color-border); padding: 12px 0; }
         .needs-item-info { flex: 1; min-width: 0; overflow-wrap: anywhere; }
@@ -4366,7 +4369,7 @@
         body.needs-view-open #pin-info-banner { display: none !important; }
         body.needs-view-open #calendar-view-toolbar { position: relative; top: 0; }
         .needs-deadline { white-space: nowrap; direction: ltr; unicode-bidi: isolate; }
-        @media (max-width: 600px) { #calendar-needs-view { padding: 8px; } .needs-item { flex-wrap: wrap; } .needs-item-actions { width: 100%; margin-inline-start: 54px; } .needs-calendar-link { font-size: 10px; } }
+        @media (max-width: 600px) { #calendar-needs-view { padding: 8px; } .needs-item { flex-wrap: wrap; } .needs-item-actions { width: 100%; margin-inline-start: 54px; } }
 </style>
 <!-- needs styles end -->
 </head>
@@ -4482,25 +4485,26 @@
 
 <!-- needs markup start -->
     <section id="calendar-needs-view" hidden aria-labelledby="needs-title">
-        <div class="needs-heading"><div><h2 id="needs-title">🛒 الاحتياجات / Needs</h2><p>قائمة مشتركة للجميع · المواعيد تظهر في التقويم / Shared list · Deadlines appear on the calendar</p></div>
-            <button type="button" class="button" onclick="Needs.refresh()">↻ تحديث / Refresh</button></div>
-        <div class="needs-filters"><label>بحث / Search <input type="search" id="needs-search" placeholder="ابحث عن عنصر / Find an item"></label>
-            <label>عرض / Show <select id="needs-filter"><option value="open">المطلوب / Outstanding</option><option value="done">المكتمل / Completed</option><option value="all">الكل / All</option></select></label>
-            <div id="needs-admin-tools" hidden><button type="button" class="button" id="needs-add-category">+ قسم جديد / New category</button></div></div>
+        <div class="needs-heading"><div><h2 id="needs-title">🛒 Needs</h2><p id="needs-description"></p></div>
+            <div class="needs-heading-actions"><button type="button" class="button btn-primary-action" id="needs-go-today" onclick="goToTodayFromNeeds()"></button>
+            <button type="button" class="button" id="needs-refresh" onclick="Needs.refresh()"></button></div></div>
+        <div class="needs-filters"><label><span id="needs-search-label"></span> <input type="search" id="needs-search"></label>
+            <label><span id="needs-filter-label"></span> <select id="needs-filter"><option value="open"></option><option value="done"></option><option value="all"></option></select></label>
+            <div id="needs-category-tools" hidden><button type="button" class="button" id="needs-add-category"></button></div></div>
         <p id="needs-status" role="status" aria-live="polite"></p>
         <form id="needs-category-form" class="needs-editor" hidden>
-            <h3>إدارة القسم / Category</h3>
-            <label>الاسم / Name <input id="needs-category-name" required maxlength="60"></label>
-            <label>English (اختياري / optional) <input id="needs-category-name-en" maxlength="60"></label>
-            <div><button type="submit" class="button btn-primary-action" id="needs-category-save">حفظ / Save</button><button type="button" class="button" onclick="document.getElementById('needs-category-form').hidden=true">إلغاء / Cancel</button></div>
+            <h3 id="needs-category-heading"></h3>
+            <label><span id="needs-category-name-label"></span> <input id="needs-category-name" required maxlength="60"></label>
+            <label><span id="needs-category-name-en-label"></span> <input id="needs-category-name-en" maxlength="60"></label>
+            <div><button type="submit" class="button btn-primary-action" id="needs-category-save"></button><button type="button" class="button" id="needs-category-cancel" onclick="document.getElementById('needs-category-form').hidden=true"></button></div>
         </form>
         <form id="needs-composer" class="needs-editor" hidden>
-            <h3 id="needs-form-heading">إضافة احتياج / Add a need</h3>
-            <label>العنصر / Item <input id="needs-item-title" required maxlength="240" autocomplete="off"></label>
-            <label>القسم / Category <select id="needs-item-category" required></select></label>
-            <label>الموعد (اختياري) / Deadline (optional) <input id="needs-item-deadline" type="date" min="1900-01-01" max="9999-12-31" placeholder="YYYY-MM-DD" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"></label>
-            <button type="button" class="button" onclick="document.getElementById('needs-item-deadline').value=''">بدون موعد / Clear deadline</button>
-            <div><button type="submit" class="button btn-primary-action" id="needs-save">حفظ للجميع / Save for everyone</button><button type="button" class="button" onclick="document.getElementById('needs-composer').hidden=true">إلغاء / Cancel</button></div>
+            <h3 id="needs-form-heading"></h3>
+            <label><span id="needs-item-title-label"></span> <input id="needs-item-title" required maxlength="240" autocomplete="off"></label>
+            <label><span id="needs-item-category-label"></span> <select id="needs-item-category" required></select></label>
+            <label><span id="needs-item-deadline-label"></span> <input id="needs-item-deadline" type="date" min="1900-01-01" max="9999-12-31" placeholder="YYYY-MM-DD" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"></label>
+            <button type="button" class="button" id="needs-clear-deadline" onclick="document.getElementById('needs-item-deadline').value=''"></button>
+            <div><button type="submit" class="button btn-primary-action" id="needs-save"></button><button type="button" class="button" id="needs-cancel" onclick="document.getElementById('needs-composer').hidden=true"></button></div>
         </form>
         <div id="needs-categories"></div>
     </section>
@@ -4531,10 +4535,10 @@
                 <button class="button btn-primary-action" id="side-today-btn" onclick="smoothScrollToToday()"
                     data-i18n="scrollToday">📍 الذهاب لليوم</button>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px; margin:4px 0;">
-                    <button class="button" onclick="closeSidebar(); switchCalendarView('day')" style="font-size:calc(11px * var(--font-scale, 1)); padding:4px;">📅 يومي (24 س)</button>
-                    <button class="button" onclick="closeSidebar(); switchCalendarView('week')" style="font-size:calc(11px * var(--font-scale, 1)); padding:4px;">🗓️ أسبوعي</button>
-                    <button class="button" onclick="closeSidebar(); switchCalendarView('year')" style="font-size:calc(11px * var(--font-scale, 1)); padding:4px;">📆 سنوي</button>
-                    <button class="button" onclick="closeSidebar(); switchCalendarView('cosmic')" style="font-size:calc(11px * var(--font-scale, 1)); padding:4px; background:linear-gradient(135deg,#6366f1,#ec4899); color:#fff;">🌌 كوني</button>
+                    <button class="button" onclick="closeSidebar(); switchCalendarView('day')" style="font-size:calc(13px * var(--font-scale, 1)); padding:4px;" data-i18n="viewDay">📅 Day (24h)</button>
+                    <button class="button" onclick="closeSidebar(); switchCalendarView('week')" style="font-size:calc(13px * var(--font-scale, 1)); padding:4px;" data-i18n="viewWeek">🗓️ Week</button>
+                    <button class="button" onclick="closeSidebar(); switchCalendarView('year')" style="font-size:calc(13px * var(--font-scale, 1)); padding:4px;" data-i18n="viewYear">📆 Year</button>
+                    <button class="button" onclick="closeSidebar(); switchCalendarView('cosmic')" style="font-size:calc(13px * var(--font-scale, 1)); padding:4px; background:linear-gradient(135deg,#6366f1,#ec4899); color:#fff;" data-i18n="viewCosmic">🌌 Cosmic</button>
                 </div>
                 <button class="button" id="side-jump-btn" onclick="openJumpNavigatorModal()"
                     data-i18n="btnJumpNavigator">🎯 التنقل والقفز السريع</button>
@@ -4542,7 +4546,7 @@
 
             <!-- 2. Notes & Calendar Actions -->
             <div class="dock-section-card">
-                <button class="button" onclick="openUniversalImportModal()" style="font-weight:700; border-color:var(--color-primary); color:var(--color-primary);">📥 استيراد ملف مناسبات ذكي</button>
+                <button class="button" onclick="openUniversalImportModal()" style="font-weight:700; border-color:var(--color-primary); color:var(--color-primary);" data-i18n="smartImport">📥 Import events file</button>
                 <button class="button" id="side-recur-btn" onclick="openRecurringEventModal()"
                     data-i18n="addRecurringEvent">🔁 إضافة حدث متكرر</button>
                 <button class="button" onclick="toggleAllCellsExpansion()" id="expand-cells-toggle-btn"
@@ -4561,7 +4565,7 @@
                 <button class="button" onclick="toggleKeyBox()" id="keybox-toggle-btn" data-i18n="keyBox">📋 الأيام
                     الخاصة
                     والفلترة</button>
-                <button class="button" onclick="openWeekStartModal()">🎯 ضبط بداية الأسبوع وقفل الشريط</button>
+                <button class="button" onclick="openWeekStartModal()" data-i18n="weekStartControl">🎯 Set week start and lock the slider</button>
                 <button class="button" id="side-admin-btn" onclick="checkAndOpenAdminModal()" data-i18n="adminPanel">🛡️
                     لوحة المسؤول</button>
                 <button class="button" id="side-settings-btn" onclick="openSettings()" data-i18n="settings">⚙️
@@ -5146,16 +5150,13 @@
                 <button class="icon-btn" onclick="closeUserProfileModal()">&times;</button>
             </div>
 
-            <!-- Avatar Upload & Preview -->
+            <!-- Initials avatar preview -->
             <div class="user-profile-avatar-wrap">
-                <div id="profile-avatar-preview" class="user-profile-avatar-preview" onclick="document.getElementById('profile-avatar-file-input').click()" title="انقر لرفع صورة شخصية">
+                <div id="profile-avatar-preview" class="user-profile-avatar-preview" data-i18n-title="avatarPreviewTitle" title="معاينة الأيقونة">
                     <span id="profile-avatar-initials">U</span>
-                    <img id="profile-avatar-img" class="user-avatar-img" style="display:none;" alt="">
                 </div>
-                <input type="file" id="profile-avatar-file-input" accept="image/*" style="display:none;" onchange="handleAvatarFileSelect(event)">
                 <div style="display: flex; gap: 6px;">
-                    <button type="button" class="button" onclick="document.getElementById('profile-avatar-file-input').click()" style="font-size:calc(11px * var(--font-scale, 1)); padding: 4px 10px;">📷 رفع صورة شخصية</button>
-                    <button type="button" class="button" id="profile-avatar-remove-btn" onclick="removeUserAvatar()" style="font-size:calc(11px * var(--font-scale, 1)); padding: 4px 8px; display: none; color: #ef4444; border-color: rgba(239,68,68,0.3);">❌ إزالة الصورة</button>
+                    <span id="profile-avatar-help" class="needs-meta">أيقونة من الأحرف الأولى لاسمك / Initials avatar</span>
                 </div>
             </div>
 
@@ -6180,7 +6181,8 @@ Eid Al-Adha 2026-05-27"></textarea>
                 monthsShort: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'],
                 hijriMonths: ['محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر', 'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', "ذو القعدة", 'ذو الحجة'],
                 strings: {
-                    appTitle: 'التقويم المستمر',
+                    appTitle: 'التقويم المستمر', viewDay: '📅 يومي (24 س)', viewWeek: '🗓️ أسبوعي', viewYear: '📆 سنوي', viewCosmic: '🌌 كوني',
+                    smartImport: '📥 استيراد ملف مناسبات ذكي', weekStartControl: '🎯 ضبط بداية الأسبوع وقفل الشريط', avatarPreviewTitle: 'معاينة الأيقونة',
                     scrollToday: '📍 الذهاب لليوم', expandAllCells: '↕️ توسيع الكل', collapseAllCells: '↕️ طي الخلايا',
                     refresh: '🔄 تحديث', print: '📤 تصدير وطباعة', help: '❓ مساعدة', settings: '⚙️ الإعدادات',
                     monthColHeader: 'الشهر',
@@ -6319,7 +6321,8 @@ Eid Al-Adha 2026-05-27"></textarea>
                 monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 hijriMonths: ['Muharram', 'Safar', "Rabi' I", "Rabi' II", 'Jumada I', 'Jumada II', 'Rajab', "Sha'ban", 'Ramadan', 'Shawwal', "Dhu al-Qi'dah", 'Dhu al-Hijjah'],
                 strings: {
-                    appTitle: 'Continuous Calendar',
+                    appTitle: 'Continuous Calendar', viewDay: '📅 Day (24h)', viewWeek: '🗓️ Week', viewYear: '📆 Year', viewCosmic: '🌌 Cosmic',
+                    smartImport: '📥 Import events file', weekStartControl: '🎯 Set week start and lock the slider', avatarPreviewTitle: 'Avatar preview',
                     scrollToday: '📍 Go to Today', expandAllCells: '↕️ Expand All', collapseAllCells: '↕️ Collapse Cells',
                     refresh: '🔄 Refresh', print: '📤 Export & Print', help: '❓ Help', settings: '⚙️ Settings',
                     monthColHeader: 'Month',
@@ -6512,11 +6515,15 @@ Eid Al-Adha 2026-05-27"></textarea>
             updateSyncStatusPill();
 
             if (calendarTableElement) loadCalendarAroundDate(todayDate);
+            Needs.applyLanguage();
             if (currentCalendarView === 'needs') Needs.render();
             if (currentCalendarView === 'day') renderDayView(activeDayViewDate, true);
             if (currentCalendarView === 'year') renderYearView(activeYearViewYear);
             updateViewToolbarUI();
         }
+
+        document.documentElement.setAttribute('lang', currentLang);
+        document.documentElement.setAttribute('dir', (LANGS[currentLang] || LANGS.ar).dir);
 
         function changeNoteDisplayLang(val) {
             noteDisplayLang = val;
@@ -6857,6 +6864,7 @@ Eid Al-Adha 2026-05-27"></textarea>
                 btn.textContent = isAllCellsExpanded ? tr('collapseAllCells') : tr('expandAllCells');
             }
         }
+        applyStaticTranslations();
 
         function toggleAllCellsExpansion() {
             isAllCellsExpanded = !isAllCellsExpanded;
@@ -6911,21 +6919,16 @@ Eid Al-Adha 2026-05-27"></textarea>
         function updateUserProfilePill() {
             var shortcut = document.getElementById('account-shortcut');
             if (shortcut) shortcut.textContent = CalendarAPI.getToken() ? '👤 ' + currentUser.name : (currentLang === 'ar' ? 'تسجيل الدخول' : 'Sign in');
+            var needsShortcut = document.getElementById('needs-shortcut');
+            if (needsShortcut && needsShortcut.firstChild) needsShortcut.firstChild.textContent = currentLang === 'ar' ? '🛒 الاحتياجات ' : '🛒 Needs ';
             var badge = document.getElementById('user-pill-badge');
             var nameEl = document.getElementById('user-pill-name');
             var adminBtn = document.getElementById('side-admin-btn');
             if (badge) {
-                if (currentUser.avatar) {
-                    badge.innerHTML = '<img src="' + currentUser.avatar + '" class="user-avatar-img" alt="">';
-                    badge.style.padding = '0';
-                    badge.style.overflow = 'hidden';
-                    badge.style.background = currentUser.color || '#38bdf8';
-                } else {
-                    badge.innerHTML = '';
-                    badge.textContent = getInitials(currentUser.name);
-                    badge.style.background = currentUser.color || '#38bdf8';
-                    badge.style.padding = '';
-                }
+                badge.textContent = getInitials(currentUser.name);
+                badge.style.background = currentUser.color || '#38bdf8';
+                badge.style.padding = '';
+                badge.style.overflow = 'hidden';
             }
             if (nameEl) nameEl.textContent = currentUser.name;
             if (adminBtn) {
@@ -7098,33 +7101,15 @@ Eid Al-Adha 2026-05-27"></textarea>
         }
 
         function renderProfileAvatarModalPreview() {
-            var avatar = tempProfileAvatar !== null ? tempProfileAvatar : (currentUser.avatar || '');
             var previewWrap = document.getElementById('profile-avatar-preview');
             var initialsEl = document.getElementById('profile-avatar-initials');
-            var imgEl = document.getElementById('profile-avatar-img');
-            var removeBtn = document.getElementById('profile-avatar-remove-btn');
             var colorInp = document.getElementById('profile-color-input');
             var nameInp = document.getElementById('profile-name-input');
             var color = colorInp ? colorInp.value : (currentUser.color || '#38bdf8');
             var name = nameInp ? nameInp.value : currentUser.name;
 
             if (previewWrap) previewWrap.style.background = color || '#38bdf8';
-
-            if (avatar) {
-                if (imgEl) {
-                    imgEl.src = avatar;
-                    imgEl.style.display = 'block';
-                }
-                if (initialsEl) initialsEl.style.display = 'none';
-                if (removeBtn) removeBtn.style.display = 'inline-flex';
-            } else {
-                if (imgEl) imgEl.style.display = 'none';
-                if (initialsEl) {
-                    initialsEl.textContent = getInitials(name);
-                    initialsEl.style.display = 'inline';
-                }
-                if (removeBtn) removeBtn.style.display = 'none';
-            }
+            if (initialsEl) { initialsEl.textContent = getInitials(name); initialsEl.style.display = 'inline'; }
         }
 
         function updateProfileAvatarPreviewColor() {
@@ -7193,7 +7178,7 @@ Eid Al-Adha 2026-05-27"></textarea>
             var name = (document.getElementById('profile-name-input').value || '').trim();
             var color = document.getElementById('profile-color-input').value || '#38bdf8';
             var oldName = (currentUser && currentUser.name) ? currentUser.name : '';
-            var avatar = tempProfileAvatar !== null ? tempProfileAvatar : (currentUser.avatar || '');
+            var avatar = '';
             var pwdInp = document.getElementById('profile-password-input');
             var password = pwdInp ? pwdInp.value.trim() : '';
 
@@ -11395,16 +11380,9 @@ Eid Al-Adha 2026-05-27"></textarea>
             }
             var compPill = document.getElementById('day-modal-composer-pill');
             if (compPill) {
-                if (currentUser.avatar) {
-                    compPill.className = 'note-author-pill has-avatar';
-                    compPill.innerHTML = '<img src="' + currentUser.avatar + '" class="author-avatar-img" alt="">';
-                    compPill.style.background = currentUser.color || '#38bdf8';
-                } else {
-                    compPill.className = 'note-author-pill';
-                    compPill.innerHTML = '';
-                    compPill.textContent = getInitials(currentUser.name);
-                    compPill.style.background = currentUser.color || '#38bdf8';
-                }
+                compPill.className = 'note-author-pill';
+                compPill.textContent = getInitials(currentUser.name);
+                compPill.style.background = currentUser.color || '#38bdf8';
             }
             var compText = document.getElementById('day-modal-composer-textarea');
             if (compText) compText.value = '';
@@ -12245,11 +12223,24 @@ Eid Al-Adha 2026-05-27"></textarea>
 
         function smoothScrollToToday() {
             closeSidebarOnMobile();
-            var todayEl = document.getElementById(idForDate(todayDate));
+            var today = new Date();
+            if (currentCalendarView !== 'week') { switchCalendarView('week', today); return; }
+            scrollToCalendarDate(today);
+        }
+
+        function goToTodayFromNeeds() {
+            closeSidebarOnMobile();
+            switchCalendarView('week', new Date());
+        }
+
+        function scrollToCalendarDate(date) {
+            var target = new Date(date);
+            var targetId = idForDate(target);
+            var todayEl = document.getElementById(targetId);
             if (!todayEl) {
-                loadCalendarAroundDate(todayDate, todayDate);
+                loadCalendarAroundDate(target, target);
                 setTimeout(function () {
-                    var el = document.getElementById(idForDate(todayDate));
+                    var el = document.getElementById(targetId);
                     if (el) {
                         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         el.classList.add('target-jump-highlight');
@@ -14400,13 +14391,16 @@ Eid Al-Adha 2026-05-27"></textarea>
 
         function switchCalendarView(mode, targetDate) {
             currentCalendarView = mode;
+            var anchorDate = targetDate ? new Date(targetDate) : new Date();
+            if (isNaN(anchorDate.getTime())) anchorDate = new Date();
+            activeDayViewDate = new Date(anchorDate);
+            activeYearViewYear = anchorDate.getFullYear();
+            activeDecadeStartYear = Math.floor(anchorDate.getFullYear() / 10) * 10 - 2;
             document.body.classList.toggle('space-view-open', mode === 'cosmic');
             document.body.classList.toggle('needs-view-open', mode === 'needs');
             document.getElementById('calendar-needs-view').hidden = mode !== 'needs';
             document.getElementById('needs-shortcut').setAttribute('aria-pressed', String(mode === 'needs'));
             if (mode !== 'cosmic' && window.CalendarSpace) window.CalendarSpace.hide();
-            if (targetDate) activeDayViewDate = new Date(targetDate);
-
             // Hide all view containers
             var calTable = document.getElementById('calendar');
             var dayView = document.getElementById('calendar-day-view');
@@ -14439,6 +14433,7 @@ Eid Al-Adha 2026-05-27"></textarea>
             }
 
             updateViewToolbarUI();
+            if (mode === 'week') requestAnimationFrame(function () { scrollToCalendarDate(anchorDate); });
         }
 
         function zoomCalendar(delta) {
@@ -14447,7 +14442,11 @@ Eid Al-Adha 2026-05-27"></textarea>
             var nextIdx = currentIdx + delta;
             if (nextIdx < 0) nextIdx = 0;
             if (nextIdx >= VIEW_ZOOM_LEVELS.length) nextIdx = VIEW_ZOOM_LEVELS.length - 1;
-            switchCalendarView(VIEW_ZOOM_LEVELS[nextIdx]);
+            var anchor = new Date();
+            if (currentCalendarView === 'day') anchor = new Date(activeDayViewDate);
+            else if (currentCalendarView === 'year') anchor = new Date(activeYearViewYear, 0, 1);
+            else if (currentCalendarView === 'decade') anchor = new Date(activeDecadeStartYear, 0, 1);
+            switchCalendarView(VIEW_ZOOM_LEVELS[nextIdx], anchor);
         }
 
         function updateViewToolbarUI() {
@@ -19139,6 +19138,36 @@ var Needs = (function () {
     function node(tag, text, className) { var n = document.createElement(tag); if (text !== undefined) n.textContent = text; if (className) n.className = className; return n; }
     function button(text, fn, className) { var b = node('button', text, 'button ' + (className || '')); b.type = 'button'; b.onclick = fn; return b; }
     function categoryName(c) { return currentLang === 'en' ? c.nameEn || c.name : c.name; }
+    function applyLanguage() {
+        var english = currentLang === 'en';
+        var text = function (id, ar, en) { var target = el(id); if (target) target.textContent = english ? en : ar; };
+        text('needs-title', '🛒 الاحتياجات', '🛒 Needs');
+        text('needs-description', 'قائمة مشتركة للجميع · المواعيد تظهر في التقويم', 'Shared list · Deadlines appear on the calendar');
+        text('needs-go-today', '📍 الذهاب لليوم', '📍 Go to today');
+        text('needs-refresh', '↻ تحديث', '↻ Refresh');
+        text('needs-search-label', 'بحث', 'Search');
+        text('needs-filter-label', 'عرض', 'Show');
+        text('needs-add-category', '+ قسم جديد', '+ New section');
+        text('needs-category-heading', categoryEditing ? 'تعديل القسم' : 'إضافة قسم', categoryEditing ? 'Edit section' : 'Add section');
+        text('needs-category-name-label', 'اسم القسم بالعربية', 'Section name in Arabic');
+        text('needs-category-name-en-label', 'اسم القسم بالإنجليزية (اختياري)', 'English section name (optional)');
+        text('needs-category-save', 'حفظ', 'Save');
+        text('needs-category-cancel', 'إلغاء', 'Cancel');
+        text('needs-item-title-label', 'العنصر', 'Item');
+        text('needs-item-category-label', 'القسم', 'Section');
+        text('needs-item-deadline-label', 'الموعد (اختياري)', 'Deadline (optional)');
+        text('needs-clear-deadline', 'بدون موعد / مسح التاريخ', 'No deadline / Clear date');
+        text('needs-save', 'حفظ للجميع', 'Save for everyone');
+        text('needs-cancel', 'إلغاء', 'Cancel');
+        text('profile-avatar-help', 'أيقونة بأحرف اسمك الأولى', 'Avatar made from your initials');
+        var shortcut = el('needs-shortcut');
+        if (shortcut && shortcut.firstChild) shortcut.firstChild.textContent = english ? '🛒 Needs ' : '🛒 الاحتياجات ';
+        var search = el('needs-search'); if (search) search.placeholder = english ? 'Find an item' : 'ابحث عن عنصر';
+        var filterSelect = el('needs-filter');
+        if (filterSelect) Array.prototype.forEach.call(filterSelect.options, function (option) {
+            option.textContent = ({ open: english ? 'Outstanding' : 'المطلوب', done: english ? 'Completed' : 'المكتمل', all: english ? 'All' : 'الكل' })[option.value] || option.value;
+        });
+    }
     function now() { return Date.now() + clockOffset; }
     function dateKey(date) { return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2); }
     function admin() { return !!(CalendarAPI.getToken() && state.viewer && state.viewer.role === 'admin'); }
@@ -19213,7 +19242,9 @@ var Needs = (function () {
         mutate('items', payload, function () { el('needs-composer').hidden = true; editing = null; });
     }
     function categoryForm(category) {
+        if (!CalendarAPI.getToken() || !state.viewer) { openAuthModal(); return; }
         categoryEditing = category ? { id: category.id, version: category.version } : null;
+        applyLanguage();
         el('needs-category-name').value = category ? category.name : '';
         el('needs-category-name-en').value = category ? category.nameEn || '' : '';
         el('needs-category-form').hidden = false; el('needs-category-name').focus();
@@ -19251,7 +19282,7 @@ var Needs = (function () {
     }
     function render() {
         if (!el('needs-categories')) return;
-        el('needs-admin-tools').hidden = !admin();
+        el('needs-category-tools').hidden = !(CalendarAPI.getToken() && state.viewer);
         var query = el('needs-search').value.trim().toLowerCase(), list = el('needs-categories'); list.innerHTML = '';
         el('needs-add-category').textContent = t('+ قسم جديد', '+ New category');
         state.categories.forEach(function (cat) {
@@ -19300,12 +19331,13 @@ var Needs = (function () {
         try { var cached = JSON.parse(localStorage.calendarNeeds || 'null'); if (cached && cached.categories && cached.items) { state = cached; state.viewer = null; state.revision = -1; } } catch (e) { }
         el('needs-composer').onsubmit = saveItem;
         el('needs-category-form').onsubmit = saveCategory;
+        applyLanguage();
         el('needs-search').oninput = render;
         el('needs-filter').onchange = function () { filter = this.value; render(); };
         el('needs-add-category').onclick = function () { categoryForm(null); };
         setInterval(updateAges, 60000);
     }
-    return { init: init, receive: receive, show: show, render: render, refresh: refresh, forDate: forDate, mountCell: mountCell, deadlineNodes: deadlineNodes, openItem: openItem, dateKey: dateKey, age: age, clearViewer: function () { state.viewer = null; if (currentCalendarView === 'needs') render(); } };
+    return { init: init, applyLanguage: applyLanguage, receive: receive, show: show, render: render, refresh: refresh, forDate: forDate, mountCell: mountCell, deadlineNodes: deadlineNodes, openItem: openItem, dateKey: dateKey, age: age, clearViewer: function () { state.viewer = null; if (currentCalendarView === 'needs') render(); } };
 })();
 
 Needs.init();</script>

@@ -4,7 +4,7 @@ const crypto = require('crypto');
 function initializeNeeds(db) {
     if (!Array.isArray(db.needsCategories)) db.needsCategories = [
         { id: 'essential', name: 'ضروري', nameEn: 'Essential', version: 1 },
-        { id: 'groceries', name: 'بقالة', nameEn: 'Supermarket', version: 1 }
+        { id: 'groceries', name: 'بقالة', nameEn: 'Groceries', version: 1 }
     ];
     if (!Array.isArray(db.needsItems)) db.needsItems = [];
     if (!Number.isInteger(db.needsRevision)) db.needsRevision = 0;
@@ -12,7 +12,8 @@ function initializeNeeds(db) {
 function snapshot(db, user) {
     initializeNeeds(db);
     return {
-        categories: db.needsCategories,
+        categories: db.needsCategories.map(category => category && category.id === 'groceries' && category.nameEn === 'Supermarket'
+            ? Object.assign({}, category, { nameEn: 'Groceries' }) : category),
         items: db.needsItems.filter(item => item && typeof item === 'object').map(item => {
             const users = Array.isArray(db.users) ? db.users : [];
             const author = users.find(u => u && u.id === item.createdBy);
@@ -38,7 +39,7 @@ async function handleNeeds(req, res, pathname, db, user, parseBody, sendJSON, sa
     const reply = (status, body) => { sendJSON(res, status, body); return true; };
     if (pathname === '/api/needs' && req.method === 'GET') return reply(200, { needs: snapshot(db, user) });
     if (!user || user.status !== 'approved') return reply(401, { error: 'سجّل الدخول لإدارة الاحتياجات. / Sign in to update needs.' });
-    if (req.method !== 'POST') return reply(405, { error: 'Method not allowed' });
+    if (req.method !== 'POST') return reply(405, { error: 'الطريقة غير مسموحة. / Method not allowed.' });
     const body = await parseBody(req);
     const admin = user.role === 'admin';
     // Work on copies, so persistence failure cannot leave an unacknowledged mutation in memory.
@@ -46,19 +47,22 @@ async function handleNeeds(req, res, pathname, db, user, parseBody, sendJSON, sa
     let items = db.needsItems.filter(i => i && typeof i === 'object').map(i => Object.assign({}, i));
     const now = Date.now();
     if (pathname === '/api/needs/categories') {
-        if (!admin) return reply(403, { error: 'إدارة الأقسام للمسؤول فقط. / Only admins manage categories.' });
         const existing = categories.find(c => c.id === body.id);
-        if (body.action !== 'add' && !existing) return reply(404, { error: 'القسم غير موجود. / Category not found.' });
-        if (existing && body.version !== existing.version) return reply(409, { error: 'تغيّر القسم على جهاز آخر. حدّث وحاول مجدداً. / Category changed; refresh and retry.' });
         if (body.action === 'delete') {
+            if (!admin) return reply(403, { error: 'إدارة الأقسام للمسؤول فقط. / Only admins can remove categories.' });
+            if (!existing) return reply(404, { error: 'القسم غير موجود. / Category not found.' });
+            if (body.version !== existing.version) return reply(409, { error: 'تغيّر القسم على جهاز آخر. حدّث وحاول مجدداً. / Category changed; refresh and retry.' });
             if (items.some(i => i.categoryId === existing.id)) return reply(409, { error: 'انقل عناصر القسم أو احذفها أولاً، بما فيها المكتملة. / Move or remove all items, including completed ones, first.' });
             categories = categories.filter(c => c.id !== existing.id);
         } else if (body.action === 'add' || body.action === 'edit') {
+            if (body.action === 'edit' && !admin) return reply(403, { error: 'إدارة الأقسام للمسؤول فقط. / Only admins can edit categories.' });
+            if (body.action === 'edit' && !existing) return reply(404, { error: 'القسم غير موجود. / Category not found.' });
+            if (existing && body.action === 'edit' && body.version !== existing.version) return reply(409, { error: 'تغيّر القسم على جهاز آخر. حدّث وحاول مجدداً. / Category changed; refresh and retry.' });
             if (!shortText(body.name, 60) || (body.nameEn && !shortText(body.nameEn, 60))) return reply(400, { error: 'اسم القسم مطلوب (حتى ٦٠ حرفاً). / Category name required (up to 60 characters).' });
-            if (categories.some(c => c.id !== body.id && c.name.toLowerCase() === body.name.trim().toLowerCase())) return reply(409, { error: 'اسم القسم موجود بالفعل. / Category name already exists.' });
-            if (existing) Object.assign(existing, { name: body.name.trim(), nameEn: (body.nameEn || '').trim(), version: existing.version + 1 });
+            if (categories.some(c => (body.action !== 'edit' || c.id !== body.id) && c.name.toLowerCase() === body.name.trim().toLowerCase())) return reply(409, { error: 'اسم القسم موجود بالفعل. / Category name already exists.' });
+            if (body.action === 'edit') Object.assign(existing, { name: body.name.trim(), nameEn: (body.nameEn || '').trim(), version: existing.version + 1 });
             else categories.push({ id: 'cat_' + crypto.randomBytes(12).toString('hex'), name: body.name.trim(), nameEn: (body.nameEn || '').trim(), version: 1 });
-        } else return reply(400, { error: 'Invalid action' });
+        } else return reply(400, { error: 'إجراء غير صالح. / Invalid action.' });
     } else if (pathname === '/api/needs/items') {
         const existing = items.find(i => i.id === body.id);
         if (body.action !== 'add' && !existing) return reply(404, { error: 'العنصر غير موجود. / Item not found.' });
@@ -66,7 +70,7 @@ async function handleNeeds(req, res, pathname, db, user, parseBody, sendJSON, sa
         if (existing && body.action !== 'complete' && !admin && existing.createdBy !== user.id) return reply(403, { error: 'التعديل لصاحب العنصر أو المسؤول. / Only the author or admin can edit this item.' });
         if (body.action === 'delete') items = items.filter(i => i.id !== existing.id);
         else if (body.action === 'complete') {
-            if (typeof body.completed !== 'boolean') return reply(400, { error: 'completed must be a boolean' });
+            if (typeof body.completed !== 'boolean') return reply(400, { error: 'يجب أن تكون قيمة الإكمال منطقية. / completed must be a boolean.' });
             Object.assign(existing, { completedAt: body.completed ? now : null, completedBy: body.completed ? user.id : null, updatedAt: now, version: existing.version + 1 });
         } else if (body.action === 'add' || body.action === 'edit') {
             if (!shortText(body.title, 240)) return reply(400, { error: 'اكتب العنصر (حتى ٢٤٠ حرفاً). / Enter an item (up to 240 characters).' });
@@ -74,8 +78,8 @@ async function handleNeeds(req, res, pathname, db, user, parseBody, sendJSON, sa
             if (!validDate(body.deadline)) return reply(400, { error: 'موعد غير صالح. استخدم YYYY-MM-DD أو اتركه فارغاً. / Invalid deadline; use YYYY-MM-DD or leave blank.' });
             if (existing) Object.assign(existing, { title: body.title.trim(), categoryId: body.categoryId, deadline: body.deadline || null, updatedAt: now, version: existing.version + 1 });
             else items.push({ id: 'need_' + crypto.randomBytes(12).toString('hex'), title: body.title.trim(), categoryId: body.categoryId, deadline: body.deadline || null, createdBy: user.id, author: user.name || user.username, createdAt: now, updatedAt: now, completedAt: null, completedBy: null, version: 1 });
-        } else return reply(400, { error: 'Invalid action' });
-    } else return reply(404, { error: 'Route not found' });
+        } else return reply(400, { error: 'إجراء غير صالح. / Invalid action.' });
+    } else return reply(404, { error: 'المسار غير موجود. / Route not found.' });
     const previous = { categories: db.needsCategories, items: db.needsItems, revision: db.needsRevision };
     db.needsCategories = categories; db.needsItems = items; db.needsRevision++;
     try { save(db, true); }

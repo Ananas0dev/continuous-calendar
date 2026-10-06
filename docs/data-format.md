@@ -9,4 +9,4 @@ Writes replace the database atomically through a temporary file, but there is no
 Unpinned notes older than 30 days may be cleaned by the server's expiry logic. Pinned notes are retained. Review that behavior before importing important long-term records.
 
 
-Household needs categories and items are shared with calendar visitors; only approved signed-in users can change items, and only admins can manage categories. Deadlines are plain Gregorian `YYYY-MM-DD` values and render in each viewer’s local calendar. Items carry creation/completion timestamps and a revision used to reject stale edits.
+Household needs categories and items are shared with calendar visitors. Approved signed-in users can add categories and manage their own items; admins can rename/remove categories and moderate items. Deadlines are plain Gregorian `YYYY-MM-DD` values and render in each viewer’s local calendar. Items carry creation/completion timestamps and a revision used to reject stale edits. The built-in `groceries` category displays as “Groceries” in English, including for databases created with the earlier “Supermarket” label.
