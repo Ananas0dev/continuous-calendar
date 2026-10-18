@@ -74,7 +74,7 @@ Open <http://127.0.0.1:3000/> and sign in as `admin` using that password. The pa
 
 This is a recovered household application, prepared for public source review. It is intended for trusted local use. Read [security limitations](SECURITY.md) before hosting it. The public copy removes embedded admin credentials and shared-PIN access, uses random session tokens, and refuses to silently replace an unreadable database. Those changes have not been deployed onto the original server.
 
-[Self-hosting](docs/self-hosting.md) · [Architecture](docs/architecture.md) · [Data format](docs/data-format.md) · [Design goals](docs/design-goals.md) · [Roadmap](docs/roadmap.md) · [Changes](CHANGELOG.md)
+[Self-hosting](docs/self-hosting.md) · [Architecture](docs/architecture.md) · [Data format](docs/data-format.md) · [Design goals](docs/design-goals.md) · [Roadmap](docs/roadmap.md) · [Work log](docs/work-log.md) · [Changes](CHANGELOG.md)
 
 ## Origins and credits
 

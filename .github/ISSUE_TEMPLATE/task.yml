@@ -1,0 +1,43 @@
+name: Task / work record
+description: Plan one dated, reviewable piece of work.
+title: "Task: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for real project work. Do not include passwords, calendar entries, private hosts, uploaded files, or tokens.
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should change for a person using or maintaining the project?
+      placeholder: Add permission tests for shared needs categories.
+    validations:
+      required: true
+  - type: input
+    id: target-date
+    attributes:
+      label: Target date
+      description: Use YYYY-MM-DD, or leave blank if this is unplanned.
+      placeholder: "2026-10-20"
+  - type: textarea
+    id: scope
+    attributes:
+      label: Expected code or documentation scope
+      description: List likely files, modules, API routes, or pages.
+      placeholder: server/test/server.test.js; server/needs.js; docs/work-log.md
+    validations:
+      required: true
+  - type: textarea
+    id: completion
+    attributes:
+      label: Completion check
+      description: State the test, manual check, or review result that will show this is complete.
+      placeholder: node --test server/test/*.test.js passes and non-admin category edits are rejected.
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Context, risks, or links
+      description: Include relevant commit/issue links. Keep private data out.
