@@ -1,41 +1,55 @@
 # Demonstration screenshots
 
-Captured from isolated local instances on 2026-10-02 using a fresh browser profile and synthetic/demo state. No production database, calendar entry, share, credential, or hostname was used. External browser requests were blocked during capture, so external integrations are not validated by these screenshots.
+All calendar notes and household Needs shown here are synthetic. Captures use an isolated local instance of the public source; no production database, account, entry, or hostname was used. Browser requests were limited to the local app.
 
-## Additional views — 2026-10-03
+## Current gallery — 2026-10-21
 
-The following screenshots use a separate temporary database and synthetic bilingual notes. They show the existing interface, including labels that remain untranslated. External requests were blocked, and no production data was used.
+The desktop captures use a 1600 × 1400 viewport. The mobile Needs view uses a 430 px viewport. The animated preview cycles through the English weekly calendar, day planner, and shared Needs page.
 
-### Arabic weekly view
+![Animated preview of weekly, daily, and shared Needs views](calendar-tour.gif)
 
-The continuous calendar with Arabic notes and Hijri/Gregorian dates.
+### English weekly calendar
 
-![Arabic weekly view](calendar-arabic-week.png)
+Synthetic notes for the week of October 18, including a selected day and Needs deadlines.
 
-### English weekly view
+![Weekly calendar with synthetic notes and Needs deadlines](calendar-week-notes.png)
 
-The continuous calendar with sample project plans, reminders, and learning notes.
+### Day planner
 
-![English weekly view with sample notes](calendar-week-notes.png)
+A timed synthetic project review appears in the 09:00 row.
 
-### Yearly overview
+![Day planner with a synthetic timed note](calendar-day.png)
 
-The yearly view using the Classic light theme, with sample notes on several days in every month. The year grid marks days containing notes; note text appears in the detail views.
+### Shared Needs — desktop
 
-![Yearly view in the light theme](calendar-year-light.png)
+Categories, outstanding items, deadlines, and the shared list status.
 
-The same yearly overview with the application's day-note panel open, showing sample planning and progress notes.
+![Desktop shared Needs page](calendar-needs.png)
 
-![Yearly overview with sample notes in the day panel](calendar-year-notes.png)
+### Shared Needs — mobile
 
-### Daily planner
+The same synthetic list at phone width. The page fits the 430 px viewport without horizontal overflow.
 
-Two all-day sample notes above the hourly schedule, with timed entries at 08:00 and 09:00.
+![Mobile shared Needs page](calendar-needs-mobile.png)
 
-![Daily planner](calendar-day.png)
+### Arabic weekly calendar
+
+The week view with synthetic Arabic notes and Hijri/Gregorian dates.
+
+![Arabic weekly calendar with synthetic notes](calendar-arabic-week.png)
+
+## Earlier views — 2026-10-02 and 2026-10-03
+
+These archived captures show the yearly overview, a selected-day panel, and settings. They also use isolated databases and synthetic notes. External browser requests were blocked during capture, so external integrations are not validated by these images.
+
+### Yearly overview in the Classic light theme
+
+![Yearly calendar in the Classic light theme](calendar-year-light.png)
+
+### Yearly overview with the day-note panel open
+
+![Yearly calendar with synthetic notes in the day panel](calendar-year-notes.png)
 
 ### Settings
 
-Theme and language selection, calendar preferences, weekends, and special days.
-
-![Settings](calendar-settings.png)
+![Calendar settings](calendar-settings.png)

@@ -4,10 +4,10 @@
 
 This project began from Evan Wallace's [Continuous Calendar](https://madebyevan.com/calendar/): scroll through weeks, click a day, and write a note. It grew into a household calendar while keeping that direct interaction at its center.
 
-![Weekly calendar with synthetic demonstration notes](screenshots/calendar-week-notes.png)
+![Animated preview of the weekly calendar, day planner, and shared Needs](screenshots/calendar-tour.gif)
 
 <details>
-<summary>More screenshots: daily, weekly, and yearly views with sample notes, plus settings</summary>
+<summary>More screenshots: calendar views, shared Needs, mobile layout, and settings</summary>
 
 **Arabic weekly view with sample notes**
 
@@ -24,6 +24,14 @@ This project began from Evan Wallace's [Continuous Calendar](https://madebyevan.
 **Daily planner with all-day and timed sample notes**
 
 ![Daily calendar with sample all-day and timed notes](screenshots/calendar-day.png)
+
+**Shared household Needs with categories and deadlines**
+
+![Shared Needs page with synthetic sample items](screenshots/calendar-needs.png)
+
+**Shared Needs on a phone-sized screen**
+
+![Mobile Needs page with synthetic sample items](screenshots/calendar-needs-mobile.png)
 
 **Language, theme, weekend, and calendar settings**
 

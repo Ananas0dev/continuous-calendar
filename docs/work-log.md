@@ -6,6 +6,7 @@ This is the dated engineering record for the public Continuous Calendar source. 
 
 | Date | Change | Code and documentation affected | Evidence |
 | --- | --- | --- | --- |
+| 2026-10-21 | Refreshed the visual gallery with a GIF and current English, Arabic, desktop, and mobile captures. | Screenshots, README, and this work log. Captures use synthetic notes and Needs items in an isolated local instance. | English desktop and mobile Edge captures reported no page errors; mobile content stayed within its 430 px viewport. See the [gallery](../screenshots/README.md). |
 | 2026-10-02 | Prepared a public-source release from the recovered deployment. | `client/index.html`, `server/server.js`, deployment examples, `docs/`, `SECURITY.md`, licenses and notices. Embedded credentials and the shared-PIN path were removed; startup uses an environment-provided password. | Commit `bc8b8aa`; [changes](../CHANGELOG.md). |
 | 2026-10-03 | Added a reproducible screenshot gallery using an isolated database and synthetic notes. | `screenshots/` and `README.md`. | Commits `93ce729` and `1fadf9f`; [gallery](../screenshots/README.md). |
 | 2026-10-06 | Added shared household needs: categories, items, deadlines, completion state, and calendar links. | `client/index.html` renders and edits needs; `server/needs.js` validates, versions, and persists them; `server/server.js` exposes the API; `docs/architecture.md` and `docs/data-format.md` describe storage. | Commit `03b2140`; [changes](../CHANGELOG.md). |
@@ -22,6 +23,10 @@ These are planned items, not claims that the work is finished.
 | CC-02 | Write an authentication and persistence improvement design. | Passwords are still stored in plaintext and persistence recovery needs stronger assurance. | `SECURITY.md`, `docs/architecture.md`, a design note, and later implementation issues. | A reviewed migration/rollback plan and tests are defined before data-format changes. |
 | CC-03 | Map the single-file client before refactoring. | The recovered client is intentionally one large file; splitting it safely needs clear boundaries. | A module map for calendar views, notes, auth, needs, storage, and external integrations. | The map identifies interfaces and a small first extraction with behavior-preservation checks. |
 | CC-04 | Run bilingual and mobile manual checks. | The calendar has Arabic/English modes and many responsive controls. | A concise checklist and synthetic screenshots where helpful. | Both languages, day/week/year views, needs, sign-in, and small-screen navigation have recorded results. |
+
+### Authentication prototype review
+
+An unmerged prototype automatically tries registration after an unknown-username login response and caches failed Hijri requests as empty results for the rest of the session. Its comment says it adds exponential backoff, but the code does not. Keep it out of the public source until sign-up is explicit and the retry behavior is bounded and accurate.
 
 ## Suggested two-week work plan
 
