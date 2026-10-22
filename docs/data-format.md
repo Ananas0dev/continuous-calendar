@@ -10,3 +10,7 @@ Unpinned notes older than 30 days may be cleaned by the server's expiry logic. P
 
 
 Household needs categories and items are shared with calendar visitors. Approved signed-in users can add categories and manage their own items; admins can rename/remove categories and moderate items. Deadlines are plain Gregorian `YYYY-MM-DD` values and render in each viewer’s local calendar. Items carry creation/completion timestamps and a revision used to reject stale edits. The built-in `groceries` category displays as “Groceries” in English, including for databases created with the earlier “Supermarket” label.
+
+## One-file local backups
+
+The shareable `client/continuous-calendar-local.html` edition keeps its working data in that browser's `localStorage`; its HTML file contains no calendar entries or account secrets. **Export backup** downloads a versioned `continuous-calendar-backup` JSON file containing notes grouped by the client date ID (`zero-based month_day_year`), recurring events, indicators, Needs, and selected display settings. Import merges notes and recurring events by ID. It adds Needs categories and items to a signed-in hosted account, matching existing categories by name and skipping duplicate items. The server still controls who can change shared indicators.

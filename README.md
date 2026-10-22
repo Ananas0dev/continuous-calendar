@@ -4,10 +4,10 @@
 
 This project began from Evan Wallace's [Continuous Calendar](https://madebyevan.com/calendar/): scroll through weeks, click a day, and write a note. It grew into a household calendar while keeping that direct interaction at its center.
 
-![Animated preview of the weekly calendar, day planner, and shared Needs](screenshots/calendar-tour.gif)
+![Animated preview of the local weekly calendar, day planner, and on-device Needs list](screenshots/calendar-tour.gif)
 
 <details>
-<summary>More screenshots: calendar views, shared Needs, mobile layout, and settings</summary>
+<summary>More screenshots: calendar views, Needs, mobile layout, and settings</summary>
 
 **Arabic weekly view with sample notes**
 
@@ -25,11 +25,11 @@ This project began from Evan Wallace's [Continuous Calendar](https://madebyevan.
 
 ![Daily calendar with sample all-day and timed notes](screenshots/calendar-day.png)
 
-**Shared household Needs with categories and deadlines**
+**On-device Needs with categories and deadlines**
 
-![Shared Needs page with synthetic sample items](screenshots/calendar-needs.png)
+![On-device Needs page with synthetic sample items](screenshots/calendar-needs.png)
 
-**Shared Needs on a phone-sized screen**
+**Needs on a phone-sized screen**
 
 ![Mobile Needs page with synthetic sample items](screenshots/calendar-needs-mobile.png)
 
@@ -56,6 +56,14 @@ Suggestions, corrections, alternative solutions, and any helpful notes are welco
 - Shared household needs with user-added categories, admin-managed category edits/removal, per-item deadlines, and shared calendar links.
 - A local 3D space explorer with Earth, solar-system, galaxy, and illustrative cosmic-web views.
 - Import/export helpers, including external spreadsheet and PDF libraries.
+
+## One-file local calendar
+
+Open [client/continuous-calendar-local.html](client/continuous-calendar-local.html) in a browser to use the calendar without installing Node.js, starting a server, or creating an account. A fresh copy opens in English; the language setting can be changed from the calendar menu.
+
+Notes, recurring events, Needs, and preferences are saved in that browser on that device. The HTML file does not contain those entries. Use **Export backup** and **Import backup** in the menu to move them, or import the same JSON backup into the hosted calendar while signed in. The hosted app adds the imported notes, recurring events, and Needs to that account; special-day indicator changes remain subject to the server's admin permission.
+
+CSV, ICS, and pasted-text imports work locally. Spreadsheet and PDF imports use the hosted build's optional libraries. To regenerate the shareable file after editing the main client, run `node client/build-standalone.cjs` from the repository root.
 
 ## Run locally
 

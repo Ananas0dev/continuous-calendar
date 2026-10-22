@@ -4392,7 +4392,7 @@
     <!-- Precision Days Slider Fixed Above Day Columns -->
     <div id="weekday-slider-bar">
         <div id="weekday-slider-inner">
-            <div class="slider-spacer" data-i18n="monthColHeader">
+            <div class="slider-spacer">
                 <span id="slider-spacer-title">الشهر / Month</span>
                 <div class="slider-controls-wrap" style="display:inline-flex; align-items:center; gap:4px; margin-inline-start:8px;">
                     <button type="button" class="slider-shift-btn" onclick="shiftWeekStart(-1)" title="تقديم بداية الأسبوع يوماً">‹</button>
@@ -4412,23 +4412,23 @@
     <!-- Unified Calendar View & Zoom Toolbar -->
     <div id="calendar-view-toolbar">
         <div class="view-controls-left">
-            <button type="button" class="button" id="needs-shortcut" onclick="switchCalendarView('needs')">🛒 الاحتياجات / Needs <span id="needs-count">0</span></button>
+            <button type="button" class="button" id="needs-shortcut" onclick="switchCalendarView('needs')">🛒 Needs <span id="needs-count">0</span></button>
             <button type="button" class="button" id="account-shortcut" onclick="if(CalendarAPI.getToken()) openUserProfileModal(); else openAuthModal();">تسجيل الدخول / Sign in</button>
             <div class="view-segmented-control" id="view-mode-selector">
                 <button type="button" class="view-btn" data-view="day" onclick="switchCalendarView('day')" title="عرض الساعات وملاحظات اليوم">
-                    <span>📅</span> <span>يومي</span>
+                    <span>📅</span> <span id="calendar-view-day-label">يومي</span>
                 </button>
                 <button type="button" class="view-btn active" data-view="week" onclick="switchCalendarView('week')" title="التقويم الأسبوعي المستمر">
-                    <span>🗓️</span> <span>أسبوعي</span>
+                    <span>🗓️</span> <span id="calendar-view-week-label">أسبوعي</span>
                 </button>
                 <button type="button" class="view-btn" data-view="year" onclick="switchCalendarView('year')" title="عرض كل شهور السنة في شبكة">
-                    <span>📆</span> <span>سنوي</span>
+                    <span>📆</span> <span id="calendar-view-year-label">سنوي</span>
                 </button>
                 <button type="button" class="view-btn" data-view="decade" onclick="switchCalendarView('decade')" title="عرض مصفوفة السنوات">
-                    <span>⏳</span> <span>سنوات</span>
+                    <span>⏳</span> <span id="calendar-view-decade-label">سنوات</span>
                 </button>
                 <button type="button" class="view-btn cosmic-btn" data-view="cosmic" onclick="switchCalendarView('cosmic')" title="رحلة كونية - أقصى تصغير ممكن!">
-                    <span>🌌</span> <span>الكون</span>
+                    <span>🌌</span> <span id="calendar-view-cosmic-label">الكون</span>
                 </button>
             </div>
         </div>
@@ -4441,7 +4441,7 @@
             </div>
 
             <button type="button" class="button" onclick="openUniversalImportModal()" style="font-size:calc(11px * var(--font-scale, 1)); padding:4px 10px; display:inline-flex; align-items:center; gap:4px; font-weight:700;" title="استيراد المناسبات والأيام الخاصة من ملف (CSV, Excel, PDF, صور)">
-                <span>📥</span> <span>استيراد مناسبات</span>
+                <span>📥</span> <span id="calendar-import-label">استيراد مناسبات</span>
             </button>
 
             <button type="button" class="button" onclick="openWeekStartModal()" style="font-size:calc(11px * var(--font-scale, 1)); padding:4px 8px; display:inline-flex; align-items:center; gap:3px;" title="تحديد بداية الأسبوع">
@@ -4460,27 +4460,27 @@
     <div id="calendar-decade-view" style="display:none; padding:24px 16px; min-height:calc(100vh - 120px);"></div>
 
     <section id="calendar-cosmic-view" style="display:none;" aria-label="مستكشف الفضاء ثلاثي الأبعاد">
-        <div class="space-heading"><div><span class="space-eyebrow">SPACE EXPLORER / مستكشف الفضاء</span><h2 id="cosmic-center-label">الأرض والقمر</h2><p id="space-subtitle"></p></div>
-        <button type="button" class="button" onclick="switchCalendarView('week')">العودة للتقويم / Calendar</button></div>
+        <div class="space-heading"><div><span class="space-eyebrow">SPACE EXPLORER</span><h2 id="cosmic-center-label">الأرض والقمر</h2><p id="space-subtitle"></p></div>
+        <button type="button" class="button" id="cosmic-return-label" onclick="switchCalendarView('week')">العودة للتقويم</button></div>
         <nav id="cosmic-scale-selector" aria-label="المقياس / Scale">
-            <button type="button" class="button" data-step="earth" onclick="setCosmicStep('earth')"><small>01</small> الأرض / Earth</button>
-            <button type="button" class="button" data-step="solar" onclick="setCosmicStep('solar')"><small>02</small> النظام الشمسي / Solar</button>
-            <button type="button" class="button" data-step="galaxy" onclick="setCosmicStep('galaxy')"><small>03</small> المجرة / Galaxy</button>
-            <button type="button" class="button" data-step="universe" onclick="setCosmicStep('universe')"><small>04</small> النسيج الكوني / Cosmic web</button>
+            <button type="button" class="button" data-step="earth" onclick="setCosmicStep('earth')"><small>01</small> <span id="cosmic-earth-label">الأرض</span></button>
+            <button type="button" class="button" data-step="solar" onclick="setCosmicStep('solar')"><small>02</small> <span id="cosmic-solar-label">النظام الشمسي</span></button>
+            <button type="button" class="button" data-step="galaxy" onclick="setCosmicStep('galaxy')"><small>03</small> <span id="cosmic-galaxy-label">المجرة</span></button>
+            <button type="button" class="button" data-step="universe" onclick="setCosmicStep('universe')"><small>04</small> <span id="cosmic-universe-label">النسيج الكوني</span></button>
         </nav>
         <p id="cosmic-status" role="status" aria-live="polite"></p>
-        <div id="space-stage"><div id="space-labels"></div><span class="space-stage-tag">3D · نموذج توضيحي / Illustrative model</span></div>
+        <div id="space-stage"><div id="space-labels"></div><span class="space-stage-tag" id="space-stage-tag">3D · نموذج توضيحي</span></div>
         <div class="space-actions">
             <p id="space-selection" aria-live="polite"></p>
             <div class="space-action-buttons">
-                <button type="button" class="button" id="space-play">Ⅱ إيقاف الحركة</button>
-                <button type="button" class="button" id="space-reset">↺ إعادة العرض</button>
+                <button type="button" class="button" id="space-play"><span id="space-play-label">Ⅱ إيقاف الحركة</span></button>
+                <button type="button" class="button" id="space-reset"><span id="space-reset-label">↺ إعادة العرض</span></button>
                 <button type="button" class="button" id="space-zoom-in" aria-label="تكبير / Zoom in">+</button>
                 <button type="button" class="button" id="space-zoom-out" aria-label="تصغير / Zoom out">−</button>
             </div>
         </div>
         <p id="cosmic-context"></p>
-        <button type="button" class="button" id="cosmic-retry" hidden onclick="setCosmicStep(currentCosmicStep)">إعادة المحاولة / Retry</button>
+        <button type="button" class="button" id="cosmic-retry" hidden onclick="setCosmicStep(currentCosmicStep)"><span id="cosmic-retry-label">إعادة المحاولة</span></button>
     </section>
 
 <!-- needs markup start -->
@@ -4554,6 +4554,9 @@
                 <button class="button" onclick="forceRefreshCalendar()" data-i18n="refresh">🔄 تحديث</button>
                 <button class="button" id="side-print-btn" onclick="openPrintModal()" data-i18n="print">📤 تصدير
                     وطباعة</button>
+                <button class="button" id="calendar-backup-export" onclick="exportCalendarBackup()">💾 <span id="calendar-backup-export-label">تصدير نسخة احتياطية</span></button>
+                <button class="button" id="calendar-backup-import" onclick="document.getElementById('calendar-backup-file').click()">📂 <span id="calendar-backup-import-label">استيراد نسخة احتياطية</span></button>
+                <input id="calendar-backup-file" type="file" accept="application/json,.json" hidden onchange="importCalendarBackup(event)">
             </div>
 
             <!-- 3. Tools, Filter & Settings -->
@@ -4594,7 +4597,7 @@
         <div class="keybox-section-title" style="display:flex; justify-content:space-between; align-items:center;">
             <span data-i18n="specialDaysTitle">المناسبات والأيام الخاصة</span>
             <button type="button" class="button" onclick="openUniversalImportModal()" style="font-size:calc(10px * var(--font-scale, 1)); padding:2px 7px; display:inline-flex; align-items:center; gap:3px;">
-                <span>📥</span> <span>استيراد ملف</span>
+                    <span>📥</span> <span id="keybox-import-label">استيراد ملف</span>
             </button>
         </div>
         <div class="keybox-body" id="keybox-items"></div>
@@ -6488,9 +6491,73 @@ Eid Al-Adha 2026-05-27"></textarea>
                 var key = el.getAttribute('data-i18n-title');
                 el.title = tr(key);
             });
+            applyCalendarChromeTranslations();
             if (typeof updateExpandCellsButtonUI === 'function') {
                 updateExpandCellsButtonUI();
             }
+        }
+
+        function applyCalendarChromeTranslations() {
+            var english = currentLang === 'en';
+            var labels = {
+                'slider-spacer-title': ['Month', 'الشهر'],
+                'calendar-view-day-label': ['Day', 'يومي'],
+                'calendar-view-week-label': ['Week', 'أسبوعي'],
+                'calendar-view-year-label': ['Year', 'سنوي'],
+                'calendar-view-decade-label': ['Decade', 'سنوات'],
+                'calendar-view-cosmic-label': ['Cosmic', 'الكون'],
+                'calendar-import-label': ['Import events', 'استيراد مناسبات'],
+                'calendar-backup-export-label': ['Export backup', 'تصدير نسخة احتياطية'],
+                'calendar-backup-import-label': ['Import backup', 'استيراد نسخة احتياطية'],
+                'keybox-import-label': ['Import file', 'استيراد ملف'],
+                'cosmic-center-label': ['Earth and Moon', 'الأرض والقمر'],
+                'cosmic-return-label': ['Calendar', 'العودة للتقويم'],
+                'cosmic-earth-label': ['Earth', 'الأرض'],
+                'cosmic-solar-label': ['Solar system', 'النظام الشمسي'],
+                'cosmic-galaxy-label': ['Galaxy', 'المجرة'],
+                'cosmic-universe-label': ['Cosmic web', 'النسيج الكوني'],
+                'space-stage-tag': ['3D · Illustrative model', '3D · نموذج توضيحي'],
+                'space-play-label': ['Ⅱ Pause animation', 'Ⅱ إيقاف الحركة'],
+                'space-reset-label': ['↺ Reset view', '↺ إعادة العرض'],
+                'cosmic-retry-label': ['Retry', 'إعادة المحاولة']
+            };
+            Object.keys(labels).forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) el.textContent = labels[id][english ? 0 : 1];
+            });
+            var titles = {
+                day: ['Day view', 'عرض اليوم'],
+                week: ['Week view', 'التقويم الأسبوعي المستمر'],
+                year: ['Year view', 'عرض كل شهور السنة في شبكة'],
+                decade: ['Decade view', 'عرض مصفوفة السنوات'],
+                cosmic: ['Cosmic view', 'رحلة كونية']
+            };
+            Object.keys(titles).forEach(function (view) {
+                var button = document.querySelector('#view-mode-selector [data-view="' + view + '"]');
+                if (button) button.title = titles[view][english ? 0 : 1];
+            });
+            var titleLabels = [
+                ['[onclick="shiftWeekStart(-1)"]', 'Move week start earlier by one day', 'تقديم بداية الأسبوع يوماً'],
+                ['[onclick="shiftWeekStart(1)"]', 'Move week start later by one day', 'تأخير بداية الأسبوع يوماً'],
+                ['#slider-lock-toggle-btn', 'Toggle the slider lock', 'انقر للتبديل بين التثبيت 🔒 والسحب التفاعلي 🔓'],
+                ['#calendar-view-toolbar .zoom-btn:first-of-type', 'Zoom out', 'تصغير الرؤية (Zoom Out)'],
+                ['#calendar-view-toolbar .zoom-btn:last-of-type', 'Zoom in', 'تكبير الرؤية (Zoom In)'],
+                ['#calendar-view-toolbar button[onclick="openUniversalImportModal()"]', 'Import events and special days from a file', 'استيراد المناسبات والأيام الخاصة من ملف (CSV, Excel, PDF, صور)'],
+                ['#calendar-view-toolbar button[onclick="openWeekStartModal()"]', 'Set the first day of the week', 'تحديد بداية الأسبوع'],
+                ['#side-recur-btn', 'Add a recurring event', 'إضافة حدث متكرر']
+            ];
+            titleLabels.forEach(function (entry) {
+                var el = document.querySelector(entry[0]);
+                if (el) el.title = entry[english ? 1 : 2];
+            });
+            var cosmic = document.getElementById('calendar-cosmic-view');
+            if (cosmic) cosmic.setAttribute('aria-label', english ? '3D space explorer' : 'مستكشف الفضاء ثلاثي الأبعاد');
+            var scale = document.getElementById('cosmic-scale-selector');
+            if (scale) scale.setAttribute('aria-label', english ? 'Scale' : 'المقياس');
+            var zoomIn = document.getElementById('space-zoom-in');
+            var zoomOut = document.getElementById('space-zoom-out');
+            if (zoomIn) zoomIn.setAttribute('aria-label', english ? 'Zoom in' : 'تكبير');
+            if (zoomOut) zoomOut.setAttribute('aria-label', english ? 'Zoom out' : 'تصغير');
         }
 
         function setLanguage(lang) {
@@ -6500,6 +6567,9 @@ Eid Al-Adha 2026-05-27"></textarea>
 
             document.documentElement.setAttribute('lang', lang);
             document.documentElement.setAttribute('dir', LANGS[lang].dir);
+            document.title = lang === 'ar' ? 'التقويم المستمر | Continuous Calendar' : 'Continuous Calendar';
+            var appTitleMeta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
+            if (appTitleMeta) appTitleMeta.content = lang === 'ar' ? 'التقويم المستمر' : 'Continuous Calendar';
 
             applyStaticTranslations();
             renderLangSwitch();
@@ -6510,6 +6580,8 @@ Eid Al-Adha 2026-05-27"></textarea>
             renderPresetButtons();
             renderIconPicker();
             renderWeekdaySlider();
+            renderRecurringEventsInKeybox();
+            updateSliderLockUI();
             populateFormMonths();
             updateUserProfilePill();
             updateSyncStatusPill();
@@ -6519,6 +6591,8 @@ Eid Al-Adha 2026-05-27"></textarea>
             if (currentCalendarView === 'needs') Needs.render();
             if (currentCalendarView === 'day') renderDayView(activeDayViewDate, true);
             if (currentCalendarView === 'year') renderYearView(activeYearViewYear);
+            if (currentCalendarView === 'decade') renderDecadeView(activeDecadeStartYear);
+            if (currentCalendarView === 'cosmic' && window.CalendarSpace) setCosmicStep(currentCosmicStep);
             updateViewToolbarUI();
         }
 
@@ -7395,6 +7469,199 @@ Eid Al-Adha 2026-05-27"></textarea>
         }
 
         var indicators = loadIndicators();
+
+        var CALENDAR_BACKUP_FORMAT = 'continuous-calendar-backup';
+        var CALENDAR_BACKUP_SETTINGS = [
+            'calendarLang', 'calendarTheme', 'weekStartDay', 'calendarNoteDisplayLang',
+            'calendarTextScale', 'calendarWeekendDays', 'isAllCellsExpanded',
+            'calendarZoomLevel', 'isSliderPinned', 'weekStartConfigured', 'isAllCellsExpanded'
+        ];
+
+        function exportCalendarBackup() {
+            var notes = {};
+            for (var i = 0; i < localStorage.length; i++) {
+                var key = localStorage.key(i);
+                if (!key || !key.startsWith('notes_')) continue;
+                try {
+                    var list = JSON.parse(localStorage.getItem(key));
+                    if (Array.isArray(list) && list.length) notes[key.slice(6)] = list;
+                } catch (e) { }
+            }
+            var settings = {};
+            CALENDAR_BACKUP_SETTINGS.forEach(function (key) {
+                var value = localStorage.getItem(key);
+                if (value !== null) settings[key] = value;
+            });
+            var data = {
+                notes: notes,
+                recurringEvents: safeBackupJSON(localStorage.getItem('calendarRecurringEvents'), []),
+                indicators: safeBackupJSON(localStorage.getItem('calendarIndicators'), indicators || []),
+                needs: safeBackupJSON(localStorage.getItem('calendarNeeds'), null),
+                settings: settings
+            };
+            var backup = { format: CALENDAR_BACKUP_FORMAT, version: 1, exportedAt: new Date().toISOString(), data: data };
+            var blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            var url = URL.createObjectURL(blob);
+            var link = document.createElement('a');
+            link.href = url;
+            link.download = 'continuous-calendar-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+            showQuickToast(currentLang === 'ar' ? 'تم تنزيل نسخة التقويم الاحتياطية.' : 'Calendar backup downloaded.');
+        }
+
+        function safeBackupJSON(raw, fallback) {
+            try { return raw ? JSON.parse(raw) : fallback; } catch (e) { return fallback; }
+        }
+
+        function mergeBackupRecords(existing, incoming) {
+            var byId = Object.create(null);
+            (Array.isArray(existing) ? existing : []).forEach(function (item) {
+                if (item && item.id) byId[item.id] = item;
+            });
+            (Array.isArray(incoming) ? incoming : []).forEach(function (item) {
+                if (item && item.id) byId[item.id] = item;
+            });
+            return Object.keys(byId).map(function (id) { return byId[id]; });
+        }
+
+        function importNeedsBackupToServer(imported) {
+            return CalendarAPI.request('/api/needs').then(function (response) {
+                var current = response.needs;
+                if (!current || !Array.isArray(current.categories) || !Array.isArray(current.items)) throw new Error('Needs data is unavailable.');
+                var categoryIds = Object.create(null);
+                var addedCount = 0;
+                var chain = Promise.resolve();
+                imported.categories.forEach(function (source) {
+                    chain = chain.then(function () {
+                        var found = current.categories.find(function (category) {
+                            return category.name && category.name.trim().toLowerCase() === String(source.name || '').trim().toLowerCase();
+                        });
+                        if (found) { categoryIds[source.id] = found.id; return; }
+                        return CalendarAPI.request('/api/needs/categories', {
+                            method: 'POST', body: { action: 'add', name: source.name, nameEn: source.nameEn || '' }
+                        }).then(function (result) {
+                            current = result.needs;
+                            var created = current.categories.find(function (category) {
+                                return category.name === source.name && (category.nameEn || '') === (source.nameEn || '');
+                            });
+                            if (!created) throw new Error('Could not restore a Needs category.');
+                            categoryIds[source.id] = created.id;
+                        });
+                    });
+                });
+                imported.items.forEach(function (source) {
+                    chain = chain.then(function () {
+                        var categoryId = categoryIds[source.categoryId] || source.categoryId;
+                        var duplicate = current.items.some(function (item) {
+                            return item.title === source.title && item.categoryId === categoryId && (item.deadline || null) === (source.deadline || null);
+                        });
+                        if (duplicate) return;
+                        return CalendarAPI.request('/api/needs/items', {
+                            method: 'POST', body: { action: 'add', title: source.title, categoryId: categoryId, deadline: source.deadline || null }
+                        }).then(function (result) {
+                            current = result.needs;
+                            addedCount++;
+                            if (!source.completedAt) return;
+                            var created = current.items.find(function (item) {
+                                return item.title === source.title && item.categoryId === categoryId && (item.deadline || null) === (source.deadline || null) && !item.completedAt;
+                            });
+                            if (!created) return;
+                            return CalendarAPI.request('/api/needs/items', {
+                                method: 'POST', body: { action: 'complete', id: created.id, version: created.version, completed: true }
+                            }).then(function (completed) { current = completed.needs; });
+                        });
+                    });
+                });
+                return chain.then(function () {
+                    if (typeof Needs !== 'undefined') { Needs.receive(current); Needs.render(); }
+                    if (typeof refreshVisibleCalendarNotesAndIndicators === 'function') refreshVisibleCalendarNotesAndIndicators();
+                    return addedCount;
+                });
+            });
+        }
+
+        function importCalendarBackup(event) {
+            var input = event && event.target;
+            var file = input && input.files && input.files[0];
+            if (!file) return;
+            if (file.size > 25 * 1024 * 1024) {
+                alert(currentLang === 'ar' ? 'حجم النسخة الاحتياطية أكبر من 25 ميغابايت.' : 'The backup is larger than 25 MB.');
+                input.value = '';
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function () {
+                try {
+                    var backup = JSON.parse(reader.result);
+                    if (!backup || backup.format !== CALENDAR_BACKUP_FORMAT || backup.version !== 1 || !backup.data) {
+                        throw new Error(currentLang === 'ar' ? 'صيغة النسخة الاحتياطية غير مدعومة.' : 'This backup format is not supported.');
+                    }
+                    var data = backup.data;
+                    var noteCount = 0;
+                    Object.keys(data.notes || {}).forEach(function (parentId) {
+                        if (!/^(?:\d{1,2}_\d{1,2}_\d{4}|\d{4}-\d{2}-\d{2})$/.test(parentId) || !Array.isArray(data.notes[parentId])) return;
+                        var current = loadNotesForDay(parentId);
+                        var incoming = data.notes[parentId].filter(function (note) { return note && note.id; });
+                        if (CalendarAPI.getToken() && !(window.CALENDAR_STANDALONE)) {
+                            incoming = incoming.map(function (note) { return Object.assign({}, note, { author: currentUser.username || currentUser.name || 'User' }); });
+                        }
+                        var merged = mergeBackupRecords(current, incoming);
+                        noteCount += Math.max(0, merged.length - current.length);
+                        saveNotesForDay(parentId, merged);
+                    });
+
+                    if (Array.isArray(data.recurringEvents)) {
+                        var oldEvents = safeBackupJSON(localStorage.getItem('calendarRecurringEvents'), []);
+                        var events = mergeBackupRecords(oldEvents, data.recurringEvents);
+                        if (CalendarAPI.getToken() && !(window.CALENDAR_STANDALONE)) {
+                            events = events.map(function (item) { return Object.assign({}, item, { author: currentUser.username || currentUser.name || 'User' }); });
+                        }
+                        saveRecurringEvents(events);
+                    }
+                    if (Array.isArray(data.indicators) && data.indicators.length) {
+                        indicators = mergeBackupRecords(indicators, data.indicators);
+                        saveIndicators();
+                    }
+                    var needsImport = Promise.resolve(0);
+                    if (data.needs && Array.isArray(data.needs.categories) && Array.isArray(data.needs.items)) {
+                        try {
+                            if (window.CALENDAR_STANDALONE && typeof Needs !== 'undefined') {
+                                localStorage.calendarNeeds = JSON.stringify(data.needs);
+                                data.needs.viewer = { id: 'local-device', role: 'admin' };
+                                Needs.receive(data.needs);
+                            } else if (CalendarAPI.getToken()) needsImport = importNeedsBackupToServer(data.needs).catch(function () { return -1; });
+                            else localStorage.calendarNeeds = JSON.stringify(data.needs);
+                        } catch (e) { }
+                    }
+                    Object.keys(data.settings || {}).forEach(function (key) {
+                        if (CALENDAR_BACKUP_SETTINGS.indexOf(key) !== -1) localStorage.setItem(key, String(data.settings[key]));
+                    });
+                    notesMemoryCache = Object.create(null);
+                    setLanguage(getPreferredLang());
+                    if (calendarTableElement) loadCalendarAroundDate(todayDate || new Date());
+                    if (window.CALENDAR_STANDALONE && typeof Needs !== 'undefined') Needs.render();
+                    needsImport.then(function (needsCount) {
+                        var needsMessage = needsCount > 0 ? (currentLang === 'ar' ? ' · احتياجات جديدة: ' : ' · Needs added: ') + needsCount
+                            : needsCount < 0 ? (currentLang === 'ar' ? ' · تعذر نقل قائمة الاحتياجات' : ' · Needs list could not be moved') : '';
+                        showQuickToast(currentLang === 'ar'
+                            ? 'تم استيراد بيانات التقويم. الملاحظات الجديدة: ' + noteCount + needsMessage
+                            : 'Calendar data imported. New notes: ' + noteCount + needsMessage);
+                    });
+                } catch (err) {
+                    alert(err.message || (currentLang === 'ar' ? 'تعذرت قراءة النسخة الاحتياطية.' : 'Could not read this backup.'));
+                } finally {
+                    input.value = '';
+                }
+            };
+            reader.onerror = function () {
+                alert(currentLang === 'ar' ? 'تعذرت قراءة الملف.' : 'Could not read the file.');
+                input.value = '';
+            };
+            reader.readAsText(file);
+        }
 
         function parseISODate(s) {
             var parts = s.split('-');
@@ -14302,6 +14569,7 @@ Eid Al-Adha 2026-05-27"></textarea>
             var track = document.getElementById('weekday-slider-track');
             if (btn) {
                 btn.className = 'slider-lock-pill ' + (isSliderPinned ? 'is-locked' : 'is-sliding');
+                btn.title = currentLang === 'ar' ? 'انقر للتبديل بين التثبيت 🔒 والسحب التفاعلي 🔓' : 'Toggle the slider lock';
             }
             if (icon) icon.textContent = isSliderPinned ? '🔒' : '🔓';
             if (text) text.textContent = isSliderPinned ? (currentLang === 'ar' ? 'مثبت' : 'Pinned') : (currentLang === 'ar' ? 'سحب حر' : 'Sliding');
@@ -14312,6 +14580,8 @@ Eid Al-Adha 2026-05-27"></textarea>
                 var lang = LANGS[currentLang] || LANGS.ar;
                 weekStartText.textContent = (currentLang === 'ar' ? 'البداية: ' : 'Start: ') + lang.weekdayShort[weekStartDay];
             }
+            var weekStartButton = document.querySelector('#calendar-view-toolbar button[onclick="openWeekStartModal()"]');
+            if (weekStartButton) weekStartButton.title = currentLang === 'ar' ? 'تحديد بداية الأسبوع' : 'Set the first day of the week';
         }
 
         function shiftWeekStart(delta) {
@@ -14573,9 +14843,9 @@ Eid Al-Adha 2026-05-27"></textarea>
             html += '      <div class="day-view-sub-title">📅 ' + gregStr + '</div>';
             html += '    </div>';
             html += '    <div class="day-view-nav-buttons">';
-            html += '      <button type="button" class="button" onclick="navigateDayView(-1)" title="اليوم السابق">‹ ' + (currentLang === 'ar' ? 'السابق' : 'Prev') + '</button>';
+            html += '      <button type="button" class="button" onclick="navigateDayView(-1)" title="' + (currentLang === 'ar' ? 'اليوم السابق' : 'Previous day') + '">‹ ' + (currentLang === 'ar' ? 'السابق' : 'Prev') + '</button>';
             html += '      <button type="button" class="button btn-primary-action" onclick="jumpDayViewToToday()">📍 ' + (currentLang === 'ar' ? 'اليوم' : 'Today') + '</button>';
-            html += '      <button type="button" class="button" onclick="navigateDayView(1)" title="اليوم التالي">' + (currentLang === 'ar' ? 'التالي' : 'Next') + ' ›</button>';
+            html += '      <button type="button" class="button" onclick="navigateDayView(1)" title="' + (currentLang === 'ar' ? 'اليوم التالي' : 'Next day') + '">' + (currentLang === 'ar' ? 'التالي' : 'Next') + ' ›</button>';
             html += '      <button type="button" class="button" onclick="switchCalendarView(\'week\')" style="margin-inline-start:6px;">🔙 ' + (currentLang === 'ar' ? 'الأسبوعي' : 'Week') + '</button>';
             html += '    </div>';
             html += '  </div>';
@@ -14651,7 +14921,7 @@ Eid Al-Adha 2026-05-27"></textarea>
                     html += '</div>';
                 });
 
-                html += '    <button type="button" class="hour-add-quick-btn">+ إضافة (' + hourStr + ')</button>';
+                html += '    <button type="button" class="hour-add-quick-btn">' + (currentLang === 'ar' ? '+ إضافة (' : '+ Add (') + hourStr + ')</button>';
                 html += '  </div>';
                 html += '</div>';
             }
@@ -14817,10 +15087,10 @@ Eid Al-Adha 2026-05-27"></textarea>
             html += '    <span>⏳</span> <span>' + startYear + ' - ' + endYear + '</span>';
             html += '  </div>';
             html += '  <div style="display:flex; align-items:center; gap:6px;">';
-            html += '    <button type="button" class="button" onclick="navigateDecadeView(-16)">‹ السابق</button>';
-            html += '    <button type="button" class="button btn-primary-action" onclick="renderDecadeView(' + (Math.floor(currentYear / 10) * 10 - 2) + ')">📍 السنوات الحالية</button>';
-            html += '    <button type="button" class="button" onclick="navigateDecadeView(16)">التالي ›</button>';
-            html += '    <button type="button" class="button" onclick="switchCalendarView(\'cosmic\')" style="margin-inline-start:6px; background:linear-gradient(135deg,#6366f1,#a855f7); color:#fff;">🌌 الكون</button>';
+            html += '    <button type="button" class="button" onclick="navigateDecadeView(-16)">‹ ' + (currentLang === 'ar' ? 'السابق' : 'Previous') + '</button>';
+            html += '    <button type="button" class="button btn-primary-action" onclick="renderDecadeView(' + (Math.floor(currentYear / 10) * 10 - 2) + ')">📍 ' + (currentLang === 'ar' ? 'السنوات الحالية' : 'Current years') + '</button>';
+            html += '    <button type="button" class="button" onclick="navigateDecadeView(16)">' + (currentLang === 'ar' ? 'التالي' : 'Next') + ' ›</button>';
+            html += '    <button type="button" class="button" onclick="switchCalendarView(\'cosmic\')" style="margin-inline-start:6px; background:linear-gradient(135deg,#6366f1,#a855f7); color:#fff;">🌌 ' + (currentLang === 'ar' ? 'الكون' : 'Cosmic') + '</button>';
             html += '  </div>';
             html += '</div>';
 
@@ -14830,7 +15100,7 @@ Eid Al-Adha 2026-05-27"></textarea>
                 var isCurrent = (y === currentYear);
                 var startH = hijriForDate(new Date(y, 0, 1));
                 var endH = hijriForDate(new Date(y, 11, 31));
-                var hText = startH.year + ' - ' + endH.year + ' هـ';
+                var hText = startH.year + ' - ' + endH.year + (currentLang === 'ar' ? ' هـ' : ' AH');
 
                 html += '<div class="decade-year-card ' + (isCurrent ? 'is-current-year' : '') + '" onclick="switchCalendarView(\'year\'); renderYearView(' + y + ');">';
                 html += '  <div class="decade-year-num">' + y + '</div>';
@@ -15253,6 +15523,9 @@ Eid Al-Adha 2026-05-27"></textarea>
         window.onload = function () {
             document.documentElement.setAttribute('lang', currentLang);
             document.documentElement.setAttribute('dir', LANGS[currentLang].dir);
+            document.title = currentLang === 'ar' ? 'التقويم المستمر | Continuous Calendar' : 'Continuous Calendar';
+            var appTitleMeta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
+            if (appTitleMeta) appTitleMeta.content = currentLang === 'ar' ? 'التقويم المستمر' : 'Continuous Calendar';
             applyStaticTranslations();
 
             setTheme(getPreferredTheme());
@@ -19142,7 +19415,7 @@ var Needs = (function () {
         var english = currentLang === 'en';
         var text = function (id, ar, en) { var target = el(id); if (target) target.textContent = english ? en : ar; };
         text('needs-title', '🛒 الاحتياجات', '🛒 Needs');
-        text('needs-description', 'قائمة مشتركة للجميع · المواعيد تظهر في التقويم', 'Shared list · Deadlines appear on the calendar');
+        text('needs-description', 'قائمة مشتركة للجميع · المواعيد تظهر في التقويم', window.CALENDAR_STANDALONE ? 'Saved on this device · Deadlines appear on the calendar' : 'Shared list · Deadlines appear on the calendar');
         text('needs-go-today', '📍 الذهاب لليوم', '📍 Go to today');
         text('needs-refresh', '↻ تحديث', '↻ Refresh');
         text('needs-search-label', 'بحث', 'Search');
@@ -19157,7 +19430,7 @@ var Needs = (function () {
         text('needs-item-category-label', 'القسم', 'Section');
         text('needs-item-deadline-label', 'الموعد (اختياري)', 'Deadline (optional)');
         text('needs-clear-deadline', 'بدون موعد / مسح التاريخ', 'No deadline / Clear date');
-        text('needs-save', 'حفظ للجميع', 'Save for everyone');
+        text('needs-save', 'حفظ للجميع', window.CALENDAR_STANDALONE ? 'Save on this device' : 'Save for everyone');
         text('needs-cancel', 'إلغاء', 'Cancel');
         text('profile-avatar-help', 'أيقونة بأحرف اسمك الأولى', 'Avatar made from your initials');
         var shortcut = el('needs-shortcut');
@@ -19199,7 +19472,7 @@ var Needs = (function () {
         message(t('جارٍ التحديث…', 'Refreshing…'));
         return CalendarAPI.request('/api/needs').then(function (data) {
             if (!data.needs) throw new Error(data.error || t('حدّث ملفات الخادم أولاً.', 'Update the server files first.'));
-            receive(data.needs); render(); message(t('محدّث · مشترك مع الجميع', 'Up to date · Shared with everyone'));
+            receive(data.needs); render(); message(t('محدّث · مشترك مع الجميع', window.CALENDAR_STANDALONE ? 'Saved on this device' : 'Up to date · Shared with everyone'));
             refreshCalendar();
         }).catch(function (e) { message(e.message || t('تعذر الاتصال بالخادم. القائمة المحفوظة للقراءة فقط.', 'Server unavailable. The saved list is read-only.'), true); });
     }
@@ -19217,7 +19490,7 @@ var Needs = (function () {
         CalendarAPI.request('/api/needs/' + kind, { method: 'POST', body: payload }).then(function (data) {
             if (!data.success || !data.needs) throw new Error(data.error || t('لم يتم الحفظ.', 'Not saved.'));
             receive(data.needs); if (done) done(); render(); refreshCalendar();
-            message(t('تم الحفظ للجميع.', 'Saved for everyone.'));
+            message(t('تم الحفظ للجميع.', window.CALENDAR_STANDALONE ? 'Saved on this device.' : 'Saved for everyone.'));
         }).catch(function (e) {
             message((e.message || t('تعذر الاتصال بالخادم.', 'Server unavailable.')) + ' ' + t('لم يتم حفظ التغيير؛ بياناتك ما زالت في النموذج.', 'Change not saved; your form is still here.'), true);
         }).then(function () { busy = false; el('needs-save').disabled = false; el('needs-category-save').disabled = false; });

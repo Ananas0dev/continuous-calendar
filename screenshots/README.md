@@ -1,12 +1,12 @@
 # Demonstration screenshots
 
-All calendar notes and household Needs shown here are synthetic. Captures use an isolated local instance of the public source; no production database, account, entry, or hostname was used. Browser requests were limited to the local app.
+All calendar notes and Needs shown here are synthetic. The current English captures use the one-file local edition in an isolated browser profile; no production database, account, entry, or hostname was used. External requests were blocked during preview.
 
-## Current gallery — 2026-10-21
+## Current gallery — 2026-10-22
 
-The desktop captures use a 1600 × 1400 viewport. The mobile Needs view uses a 430 px viewport. The animated preview cycles through the English weekly calendar, day planner, and shared Needs page.
+The English week, day, and on-device Needs captures use a 1600 × 1400 viewport. The mobile Needs view uses a 430 px viewport. The animated preview cycles through the English weekly calendar, day planner, and on-device Needs page.
 
-![Animated preview of weekly, daily, and shared Needs views](calendar-tour.gif)
+![Animated preview of the local weekly calendar, day planner, and on-device Needs list](calendar-tour.gif)
 
 ### English weekly calendar
 
@@ -20,11 +20,11 @@ A timed synthetic project review appears in the 09:00 row.
 
 ![Day planner with a synthetic timed note](calendar-day.png)
 
-### Shared Needs — desktop
+### On-device Needs — desktop
 
-Categories, outstanding items, deadlines, and the shared list status.
+Categories, outstanding items, deadlines, and local save status in the one-file edition.
 
-![Desktop shared Needs page](calendar-needs.png)
+![Desktop on-device Needs page](calendar-needs.png)
 
 ### Shared Needs — mobile
 
